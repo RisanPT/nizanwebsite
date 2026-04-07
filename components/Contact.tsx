@@ -2,243 +2,217 @@
 
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react';
-
-const contactInfo = [
-  {
-    icon: MapPin,
-    title: 'Studio Location',
-    detail: '45 Bridal Lane, Luxury District\nKozhikkode, Kerala',
-  },
-  {
-    icon: Phone,
-    title: 'Call or WhatsApp',
-    detail: '+91 300 123 4567',
-  },
-  {
-    icon: Mail,
-    title: 'Email Us',
-    detail: 'hello@nizanmakeovers.com',
-  },
-  {
-    icon: Clock,
-    title: 'Working Hours',
-    detail: 'Tue – Sun: 9 AM – 7 PM\nMonday: By Appointment',
-  },
-];
 
 export default function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
+
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: '',
+    message: '',
+  });
   const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
-    }, 1200);
+    setSubmitted(true);
   };
 
+  const fadeUp = (delay = 0) => ({
+    initial: { opacity: 0, y: 24 },
+    animate: inView ? { opacity: 1, y: 0 } : {},
+    transition: { delay, duration: 0.7, ease: [0.22, 1, 0.36, 1] as const },
+  });
+
+  const inputClass =
+    'w-full bg-white/5 border border-white/10 focus:border-gold/60 text-white placeholder-white/30 text-sm px-5 py-4 outline-none transition-colors duration-300';
+
   return (
-    <section id="contact" className="section-cream py-28 lg:py-36" ref={ref}>
+    <section
+      id="contact"
+      className="section-dark py-28 lg:py-36 relative overflow-hidden"
+      ref={ref}
+    >
+      {/* Decorative gold orb */}
+      <div
+        className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(201,162,39,0.06) 0%, transparent 70%)',
+          filter: 'blur(40px)',
+        }}
+      />
+
       <div className="max-w-[1320px] mx-auto px-6 lg:px-8">
+        {/* Header */}
         <div className="text-center mb-16">
           <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            className="text-gold text-xs font-medium tracking-[0.3em] uppercase mb-4 block"
+            {...fadeUp(0)}
+            className="text-gold text-[11px] font-medium tracking-[0.3em] uppercase mb-4 block"
           >
-            Let&apos;s Connect
+            Get In Touch
           </motion.span>
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.1, duration: 0.6 }}
-            className="font-display text-4xl md:text-5xl font-light text-navy mb-5"
+            {...fadeUp(0.1)}
+            className="font-display text-4xl md:text-5xl font-light text-white mb-5"
           >
-            Get in Touch
+            Contact Us
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.2, duration: 0.6 }}
-            className="text-navy/60 text-lg max-w-xl mx-auto"
+            {...fadeUp(0.2)}
+            className="text-white/50 text-lg max-w-lg mx-auto leading-relaxed"
           >
-            Ready to begin your luxury beauty journey? Reach out and let us
-            craft your perfect look.
+            Have a question or ready to book? Reach out and we&apos;ll get back to
+            you promptly.
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-          {/* Left: Info + Map */}
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.25, duration: 0.7 }}
-          >
-            <div className="space-y-8 mb-10">
-              {contactInfo.map((info, i) => {
-                const Icon = info.icon;
-                return (
-                  <motion.div
-                    key={info.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
-                    className="flex gap-5 items-start group"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center shrink-0 group-hover:bg-gold/20 transition-colors duration-300">
-                      <Icon size={18} className="text-gold" strokeWidth={1.5} />
-                    </div>
-                    <div>
-                      <h4 className="text-navy font-medium text-sm tracking-wide mb-1">
-                        {info.title}
-                      </h4>
-                      <p className="text-navy/60 text-sm leading-relaxed whitespace-pre-line">
-                        {info.detail}
-                      </p>
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
-
-            {/* Map placeholder */}
-            <div className="relative h-56 bg-navy/5 border border-navy/10 overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPin size={32} className="text-gold mx-auto mb-2" strokeWidth={1.5} />
-                  <p className="text-navy/50 text-sm">Interactive Map</p>
-                  <p className="text-navy/30 text-xs mt-1">45 Bridal Lane, Karachi</p>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          {/* Left — contact info */}
+          <motion.div {...fadeUp(0.25)} className="space-y-10">
+            {[
+              {
+                icon: '📍',
+                label: 'Studio Location',
+                value: 'Available on request — home visits welcome',
+              },
+              {
+                icon: '📞',
+                label: 'Phone / WhatsApp',
+                value: '+91 00000 00000',
+              },
+              {
+                icon: '✉️',
+                label: 'Email',
+                value: 'hello@nizanmakeovers.com',
+              },
+              {
+                icon: '🕐',
+                label: 'Working Hours',
+                value: 'Mon – Sat: 9 AM – 7 PM',
+              },
+            ].map((item) => (
+              <div key={item.label} className="flex gap-5 items-start">
+                <div className="w-11 h-11 border border-gold/30 flex items-center justify-center text-lg shrink-0">
+                  {item.icon}
+                </div>
+                <div>
+                  <p className="text-[10px] tracking-[0.25em] uppercase text-gold/70 mb-1">
+                    {item.label}
+                  </p>
+                  <p className="text-white/80 text-base">{item.value}</p>
                 </div>
               </div>
-              {/* decorative grid */}
-              <div
-                className="absolute inset-0 opacity-5"
-                style={{
-                  backgroundImage: 'linear-gradient(#0b1b3b 1px, transparent 1px), linear-gradient(to right, #0b1b3b 1px, transparent 1px)',
-                  backgroundSize: '40px 40px',
-                }}
-              />
+            ))}
+
+            {/* Ornamental divider */}
+            <div className="flex items-center gap-4 pt-4">
+              <div className="flex-1 h-px bg-gold/20" />
+              <span className="text-gold/40 text-xs">✦</span>
+              <div className="flex-1 h-px bg-gold/20" />
             </div>
+
+            <p className="text-white/35 text-sm leading-relaxed">
+              Follow our transformations on Instagram and stay updated with the
+              latest looks, tips, and exclusive offers.
+            </p>
           </motion.div>
 
-          {/* Right: Form */}
-          <motion.div
-            initial={{ opacity: 0, x: 40 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.3, duration: 0.7 }}
-          >
+          {/* Right — form */}
+          <motion.div {...fadeUp(0.35)}>
             {submitted ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center py-20"
-              >
-                <div className="w-16 h-16 rounded-full bg-gold/20 flex items-center justify-center mx-auto mb-6">
-                  <Send size={24} className="text-gold" strokeWidth={1.5} />
-                </div>
-                <h3 className="font-display text-2xl text-navy mb-3">Message Sent!</h3>
-                <p className="text-navy/60 text-sm">
-                  Thank you for reaching out. We&apos;ll be in touch within 24 hours.
+              <div className="border border-gold/30 p-12 text-center">
+                <div className="text-gold text-4xl mb-4">✦</div>
+                <h3 className="font-display text-2xl text-white font-light mb-3">
+                  Message Received
+                </h3>
+                <p className="text-white/50 text-sm leading-relaxed">
+                  Thank you for reaching out. We&apos;ll be in touch with you shortly.
                 </p>
-              </motion.div>
+              </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="block text-xs font-medium tracking-[0.1em] uppercase text-navy/70 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Fatima"
-                      className="w-full px-4 py-3.5 border border-navy/15 bg-white text-navy text-sm placeholder-navy/30 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/10 transition-all duration-300"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium tracking-[0.1em] uppercase text-navy/70 mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ahmed"
-                      className="w-full px-4 py-3.5 border border-navy/15 bg-white text-navy text-sm placeholder-navy/30 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/10 transition-all duration-300"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium tracking-[0.1em] uppercase text-navy/70 mb-2">
-                    Email Address
-                  </label>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <input
-                    type="email"
+                    id="contact-name"
+                    name="name"
+                    type="text"
                     required
-                    placeholder="fatima@example.com"
-                    className="w-full px-4 py-3.5 border border-navy/15 bg-white text-navy text-sm placeholder-navy/30 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/10 transition-all duration-300"
+                    placeholder="Your Name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={inputClass}
                   />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium tracking-[0.1em] uppercase text-navy/70 mb-2">
-                    Service Interested In
-                  </label>
-                  <select
-                    className="w-full px-4 py-3.5 border border-navy/15 bg-white text-navy text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/10 transition-all duration-300 appearance-none"
-                  >
-                    <option value="">Select a service...</option>
-                    <option>Bridal Elegance</option>
-                    <option>Event Glamour</option>
-                    <option>Editorial & Fashion</option>
-                    <option>Luxury Package</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-medium tracking-[0.1em] uppercase text-navy/70 mb-2">
-                    Event Date
-                  </label>
                   <input
-                    type="date"
-                    className="w-full px-4 py-3.5 border border-navy/15 bg-white text-navy text-sm focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/10 transition-all duration-300"
+                    id="contact-phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="Phone / WhatsApp"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className={inputClass}
                   />
                 </div>
 
-                <div>
-                  <label className="block text-xs font-medium tracking-[0.1em] uppercase text-navy/70 mb-2">
-                    Your Message
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Tell us about your vision, skin type, or any special requests..."
-                    className="w-full px-4 py-3.5 border border-navy/15 bg-white text-navy text-sm placeholder-navy/30 focus:outline-none focus:border-gold focus:ring-2 focus:ring-gold/10 transition-all duration-300 resize-none"
-                  />
-                </div>
+                <input
+                  id="contact-email"
+                  name="email"
+                  type="email"
+                  placeholder="Email Address"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+
+                <select
+                  id="contact-service"
+                  name="service"
+                  value={formData.service}
+                  onChange={handleChange}
+                  className={`${inputClass} appearance-none`}
+                >
+                  <option value="" disabled>
+                    Select a Service
+                  </option>
+                  {[
+                    'Bridal Makeover',
+                    'Party Makeover',
+                    'Editorial / Fashion',
+                    'Engagement Look',
+                    'Other',
+                  ].map((s) => (
+                    <option key={s} value={s} className="bg-navy text-white">
+                      {s}
+                    </option>
+                  ))}
+                </select>
+
+                <textarea
+                  id="contact-message"
+                  name="message"
+                  rows={5}
+                  placeholder="Tell us about your event or any questions…"
+                  value={formData.message}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
 
                 <button
+                  id="contact-submit-btn"
                   type="submit"
-                  disabled={loading}
-                  className="shimmer-btn w-full bg-navy hover:bg-navy-dark text-white text-xs font-semibold tracking-[0.2em] uppercase py-4 flex items-center justify-center gap-3 transition-all duration-400 hover:shadow-[0_8px_30px_rgba(11,27,59,0.3)] disabled:opacity-60"
+                  className="shimmer-btn w-full bg-gold hover:bg-gold-light text-navy text-[11px] font-bold tracking-[0.22em] uppercase py-4 transition-all duration-400 hover:shadow-[0_0_40px_rgba(201,162,39,0.55)]"
                   style={{ borderRadius: 0 }}
                 >
-                  {loading ? (
-                    <motion.div
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
-                      className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
-                    />
-                  ) : (
-                    <>
-                      <Send size={14} strokeWidth={2} />
-                      Send Message
-                    </>
-                  )}
+                  Send Message
                 </button>
               </form>
             )}

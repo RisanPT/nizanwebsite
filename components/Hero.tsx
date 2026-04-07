@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import ParticleCanvas from './ParticleCanvas';
 
-const TOTAL_FRAMES = 244;
-const CACHE_BUSTER = "?v=2";
+const TOTAL_FRAMES = 240;
+const CACHE_BUSTER = "?v=3";
 
 // Preload first N frames for instant display
 const PRELOAD_COUNT = 20;
@@ -91,7 +91,7 @@ export default function Hero({ onBook }: HeroProps) {
             ref={imgRef}
             src={frameSrc}
             alt="Bridal makeup cinematic portrait"
-            className="absolute top-0 right-0 h-full w-auto max-w-none"
+            className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none"
             style={{ display: 'block' }}
           />
         </motion.div>
@@ -113,6 +113,16 @@ export default function Hero({ onBook }: HeroProps) {
           }}
         />
 
+        {/* Watermark cover — soft corner blend */}
+        <div
+          className="absolute bottom-0 right-0 z-[2] pointer-events-none"
+          style={{
+            width: '200px',
+            height: '100px',
+            background: 'radial-gradient(ellipse at bottom right, rgba(6,15,34,1) 0%, rgba(6,15,34,0.85) 40%, transparent 75%)',
+          }}
+        />
+
         {/* Antigravity particle system — z above overlay */}
         <ParticleCanvas isMobile={isMobile} />
 
@@ -130,7 +140,7 @@ export default function Hero({ onBook }: HeroProps) {
               >
                 <div className="w-8 h-px bg-gold" />
                 <span className="text-gold text-[11px] font-medium tracking-[0.35em] uppercase">
-                  Luxury Beauty Aesthetics
+                  Luxury Bridal Makeup Studio
                 </span>
                 <div className="w-8 h-px bg-gold" />
               </motion.div>
@@ -141,11 +151,11 @@ export default function Hero({ onBook }: HeroProps) {
                 animate={heroReady ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 1.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 className="font-display font-light text-white leading-[1.05] tracking-tight mb-8"
-                style={{ fontSize: 'clamp(3rem, 7vw, 5.5rem)' }}
+                style={{ fontSize: 'clamp(2.6rem, 6vw, 5rem)' }}
               >
-                Reveal Your{' '}
+                Professional{' '}
                 <span className="relative italic">
-                  Ultimate
+                  Bridal
                   {/* Gold underline — draws left to right */}
                   <motion.span
                     initial={{ scaleX: 0 }}
@@ -164,7 +174,7 @@ export default function Hero({ onBook }: HeroProps) {
                     backgroundClip: 'text',
                   }}
                 >
-                  Beauty
+                  Makeup Services
                 </span>
               </motion.h1>
 
@@ -173,10 +183,12 @@ export default function Hero({ onBook }: HeroProps) {
                 initial={{ opacity: 0, y: 24 }}
                 animate={heroReady ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: 1.5, duration: 0.8, ease: 'easeOut' }}
-                className="text-white/70 text-lg md:text-xl font-light leading-relaxed mb-10 max-w-lg"
+                className="text-white/70 text-base md:text-lg font-light leading-relaxed mb-10 max-w-xl"
               >
-                Experience unparalleled luxury with professional bridal, fashion,
-                and party makeovers — tailored perfectly to you.
+                Soft glam. Timeless beauty. Unforgettable moments.<br />
+                <span className="text-white/50 text-sm mt-2 block">
+                  Professional Airbrush Bridal Makeup for weddings, engagements, and special events — specializing in Hindu, Christian &amp; Muslim bridal looks. Luxury services also available for celebrities and public figures.
+                </span>
               </motion.p>
 
               {/* CTA Buttons */}
@@ -192,14 +204,14 @@ export default function Hero({ onBook }: HeroProps) {
                   className="shimmer-btn group relative bg-gold text-navy text-[11px] font-bold tracking-[0.22em] uppercase px-9 py-4 transition-all duration-400 hover:bg-gold-light hover:shadow-[0_0_40px_rgba(201,162,39,0.65)] pulse-gold"
                   style={{ borderRadius: 0 }}
                 >
-                  Book Appointment
+                  Book Now
                 </button>
                 <button
                   onClick={() => scrollTo('services')}
                   className="group border border-white/25 hover:border-gold/70 text-white/80 hover:text-gold text-[11px] font-medium tracking-[0.22em] uppercase px-9 py-4 transition-all duration-400 backdrop-blur-sm hover:bg-gold/5"
                   style={{ borderRadius: 0 }}
                 >
-                  Discover Services
+                  Our Services
                   <span className="inline-block ml-2 transition-transform duration-300 group-hover:translate-x-1">→</span>
                 </button>
               </motion.div>

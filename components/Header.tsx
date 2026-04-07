@@ -5,11 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
 const navLinks = [
-  { label: 'Home', href: '#home' },
+  { label: 'About Us', href: '#about' },
   { label: 'Services', href: '#services' },
-  { label: 'Portfolio', href: '#portfolio' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'About', href: '#about' },
+  { label: 'Our Works', href: '#portfolio' },
+  { label: 'Our Team', href: '#team' },
   { label: 'Contact', href: '#contact' },
 ];
 
@@ -89,7 +88,7 @@ export default function Header({ onBook }: HeaderProps) {
             className="shimmer-btn hidden lg:inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-navy text-xs font-semibold tracking-[0.15em] uppercase px-6 py-3 transition-all duration-300 hover:shadow-[0_0_24px_rgba(201,162,39,0.5)]"
             style={{ borderRadius: 0 }}
           >
-            Book Appointment
+            Book Now
           </button>
 
           {/* Mobile menu button */}
@@ -131,7 +130,7 @@ export default function Header({ onBook }: HeaderProps) {
                 onClick={handleBooking}
                 className="shimmer-btn mt-2 bg-gold text-navy text-xs font-semibold tracking-[0.15em] uppercase px-6 py-3 text-center"
               >
-                Book Appointment
+                Book Now
               </button>
             </div>
           </motion.div>

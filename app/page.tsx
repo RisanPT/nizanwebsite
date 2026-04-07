@@ -8,10 +8,12 @@ import Footer from '@/components/Footer';
 import BookingModal from '@/components/BookingModal';
 
 // Lazy-load below-fold sections
+const About = dynamic(() => import('@/components/About'), { ssr: false });
 const Services = dynamic(() => import('@/components/Services'), { ssr: false });
 const Portfolio = dynamic(() => import('@/components/Portfolio'), { ssr: false });
+const Team = dynamic(() => import('@/components/Team'), { ssr: false });
 const WhyChoose = dynamic(() => import('@/components/WhyChoose'), { ssr: false });
-const Pricing = dynamic(() => import('@/components/Pricing'), { ssr: false });
+// const Pricing = dynamic(() => import('@/components/Pricing'), { ssr: false });
 const CTA = dynamic(() => import('@/components/CTA'), { ssr: false });
 const Contact = dynamic(() => import('@/components/Contact'), { ssr: false });
 
@@ -27,8 +29,10 @@ export default function Home() {
       <Hero onBook={openBooking} />
       <Services />
       <Portfolio />
+      <Team />
       <WhyChoose />
-      <Pricing />
+      <About />
+      {/* <Pricing /> — hidden until pricing is ready */}
       <CTA onBook={openBooking} />
       <Contact />
       <Footer />

@@ -2,28 +2,21 @@
 
 import { useRef } from 'react';
 import { motion, useInView, Variants } from 'framer-motion';
-import { Sparkles, PartyPopper, Camera } from 'lucide-react';
+import { Wind, Wand2 } from 'lucide-react';
 
 const services = [
   {
-    icon: Sparkles,
-    title: 'Bridal Elegance',
+    icon: Wind,
+    title: 'Airbrush Makeup',
     description:
-      'Flawless, long-lasting luxury makeup tailored to enhance your natural features on your most cherished day. Every detail perfected.',
-    tag: 'Most Popular',
+      'A lightweight, long-lasting technique applied using an airbrush machine for a smooth, flawless, natural finish. Perfect for weddings and long events.',
+    tag: 'Trending',
   },
   {
-    icon: PartyPopper,
-    title: 'Event Glamour',
+    icon: Wand2,
+    title: 'Signature Makeup',
     description:
-      'Stand out at any occasion with our signature party glam, ranging from subtle sophistication to bold, statement-making looks.',
-    tag: null,
-  },
-  {
-    icon: Camera,
-    title: 'Editorial & Fashion',
-    description:
-      'Camera-ready avant-garde artistry designed for professional shoots, runway shows, and high-fashion editorial campaigns.',
+      'A customized style to enhance unique features with elegance and perfection, creating a timeless and radiant bridal look.',
     tag: null,
   },
 ];
@@ -74,7 +67,7 @@ export default function Services() {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto">
           {services.map((svc, i) => {
             const Icon = svc.icon;
             return (
