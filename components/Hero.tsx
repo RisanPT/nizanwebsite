@@ -22,9 +22,16 @@ export default function Hero({ onBook }: HeroProps) {
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
     const t = setTimeout(() => setHeroReady(true), 150);
-    return () => clearTimeout(t);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      clearTimeout(t);
+    };
   }, []);
 
   // Preload initial frames for smooth start
@@ -37,6 +44,11 @@ export default function Hero({ onBook }: HeroProps) {
 
   // Scroll-driven frame sequencing
   useEffect(() => {
+    if (isMobile) {
+      setCurrentFrame(1);
+      return;
+    }
+
     let ticking = false;
 
     const handleScroll = () => {
@@ -60,10 +72,11 @@ export default function Hero({ onBook }: HeroProps) {
       window.removeEventListener('scroll', handleScroll);
       cancelAnimationFrame(rafRef.current);
     };
-  }, []);
+  }, [isMobile]);
 
   const frameNum = String(currentFrame).padStart(3, '0');
   const frameSrc = `/frames/ezgif-frame-${frameNum}.jpg${CACHE_BUSTER}`;
+  const mobileFrameSrc = `/frames/ezgif-frame-001.jpg${CACHE_BUSTER}`;
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -74,7 +87,7 @@ export default function Hero({ onBook }: HeroProps) {
     <section
       id="home"
       className="relative"
-      style={{ height: '400vh', background: '#060f22' }}
+      style={{ height: isMobile ? '100vh' : '400vh', background: '#060f22' }}
     >
       {/* Sticky viewport */}
       <div className="sticky top-0 h-screen overflow-hidden">
@@ -89,7 +102,7 @@ export default function Hero({ onBook }: HeroProps) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             ref={imgRef}
-            src={frameSrc}
+            src={isMobile ? mobileFrameSrc : frameSrc}
             alt="Bridal makeup cinematic portrait"
             className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none"
             style={{ display: 'block' }}
