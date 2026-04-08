@@ -40,13 +40,20 @@ export default function Hero({ onBook }: HeroProps) {
   }, []);
 
   useEffect(() => {
+    if (isMobile) {
+      setShowBridalIcons(true);
+      setMinDelayPassed(true);
+      setHeroReady(true);
+      return;
+    }
+
     const timer = setTimeout(() => {
       setShowBridalIcons(true);
       setMinDelayPassed(true);
     }, MIN_LOADING_MS);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
     if (isMobile) {
@@ -84,11 +91,13 @@ export default function Hero({ onBook }: HeroProps) {
 
   // Initial hero activation sequence — wait for BOTH assets and the minimum splash duration.
   useEffect(() => {
+    if (isMobile) return;
+
     if (isLoaded && minDelayPassed) {
       const t = setTimeout(() => setHeroReady(true), 500);
       return () => clearTimeout(t);
     }
-  }, [isLoaded, minDelayPassed]);
+  }, [isLoaded, isMobile, minDelayPassed]);
 
   useEffect(() => {
     if (!isMobile && heroReady && videoRef.current) {
