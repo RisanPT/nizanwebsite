@@ -23,10 +23,11 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="mb-6">
-              <span className="font-display text-3xl font-semibold text-white block leading-tight">
-                Nizan
-              </span>
-              <span className="text-xs tracking-[0.25em] text-gold uppercase">Makeovers</span>
+              <img 
+                src="/nizan_logo_white.png" 
+                alt="Nizan Makeovers Logo" 
+                className="h-20 md:h-32 w-auto object-contain opacity-90"
+              />
             </div>
             <p className="text-white/50 text-sm leading-relaxed max-w-xs mb-8">
               Redefining luxury beauty with artistry, precision, and the finest

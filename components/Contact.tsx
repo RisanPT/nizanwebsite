@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
+import { postToErp } from '@/lib/erp';
 
 export default function Contact() {
   const ref = useRef(null);
@@ -15,6 +16,8 @@ export default function Contact() {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -22,9 +25,35 @@ export default function Contact() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setError('');
+
+    try {
+      await postToErp({
+        path: '/api/leads/public',
+        body: {
+          ...formData,
+          source: 'website-contact',
+        },
+      });
+
+      setSubmitted(true);
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        service: '',
+        message: '',
+      });
+    } catch (submitError) {
+      setError(
+        submitError instanceof Error ? submitError.message : 'Something went wrong'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const fadeUp = (delay = 0) => ({
@@ -209,11 +238,17 @@ export default function Contact() {
                 <button
                   id="contact-submit-btn"
                   type="submit"
+                  disabled={submitting}
                   className="shimmer-btn w-full bg-gold hover:bg-gold-light text-navy text-[11px] font-bold tracking-[0.22em] uppercase py-4 transition-all duration-400 hover:shadow-[0_0_40px_rgba(201,162,39,0.55)]"
                   style={{ borderRadius: 0 }}
                 >
-                  Send Message
+                  {submitting ? 'Sending...' : 'Send Message'}
                 </button>
+                {error ? (
+                  <p className="text-red-300 text-sm" role="alert">
+                    {error}
+                  </p>
+                ) : null}
               </form>
             )}
           </motion.div>

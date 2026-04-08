@@ -49,20 +49,20 @@ export default function Header({ onBook }: HeaderProps) {
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-[1320px] mx-auto px-6 lg:px-8 py-4 flex items-center justify-between">
-        {/* Logo */}
+      <div className="max-w-[1320px] mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
         <motion.a
           href="#home"
           onClick={(e) => { e.preventDefault(); handleNavClick('#home'); }}
-          className="flex flex-col leading-tight"
+          className="flex items-center"
           whileHover={{ scale: 1.02 }}
         >
-          <span className="font-display text-2xl font-semibold text-white tracking-wide">
-            Nizan
-          </span>
-          <span className="text-xs tracking-[0.25em] text-gold uppercase font-light">
-            Makeovers
-          </span>
+          <img 
+            src="/nizan_logo_white.png" 
+            alt="Nizan Makeovers Logo" 
+            className={`transition-all duration-500 object-contain w-auto ${
+              scrolled ? 'h-16 md:h-20' : 'h-24 md:h-32'
+            }`}
+          />
         </motion.a>
 
         {/* Desktop Nav */}

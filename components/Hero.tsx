@@ -159,6 +159,20 @@ export default function Hero({ onBook }: HeroProps) {
           >
             <div className="w-full max-w-[400px] flex flex-col items-center space-y-12">
               
+              {/* Brand Logo in Loader */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 1.2, ease: "easeOut" }}
+                className="mb-8"
+              >
+                <img 
+                  src="/nizan_logo_white.png" 
+                  alt="Nizan Makeovers Logo" 
+                  className="h-32 md:h-48 w-auto object-contain"
+                />
+              </motion.div>
+
               {/* Rounded Bridal Icons Sequence */}
               <div className="flex gap-4 md:gap-6">
                 {BRIDAL_STYLES.map((style, idx) => (
@@ -315,7 +329,7 @@ export default function Hero({ onBook }: HeroProps) {
               >
                 <div className="w-8 h-px bg-gold" />
                 <span className="text-gold text-[11px] font-medium tracking-[0.35em] uppercase">
-                  Luxury Bridal Makeup Studio
+                  Celebrity Makeup Artist
                 </span>
                 <div className="w-8 h-px bg-gold" />
               </motion.div>

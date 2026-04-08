@@ -48,6 +48,19 @@ export default function CTA({ onBook }: CTAProps) {
       </div>
 
       <div className="relative z-[2] max-w-[1320px] mx-auto px-6 lg:px-8 text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1, ease: "easeOut" }}
+          className="flex justify-center mb-8"
+        >
+          <img 
+            src="/nizan_logo_white.png" 
+            alt="Nizan Makeovers Logo" 
+            className="h-20 lg:h-28 w-auto object-contain"
+          />
+        </motion.div>
+
         <motion.span
           initial={{ opacity: 0, y: 10 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}

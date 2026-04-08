@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, Phone, Mail, User, CheckCircle2, ArrowRight } from 'lucide-react';
+import { postToErp } from '@/lib/erp';
 
 type Step = 'DATE' | 'DETAILS' | 'SUCCESS';
 
@@ -15,6 +16,9 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [step, setStep] = useState<Step>('DATE');
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [bookingNumber, setBookingNumber] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -28,12 +32,45 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     if (isOpen) {
       setStep('DATE');
       setSelectedDate(null);
+      setBookingNumber('');
+      setError('');
+      setSubmitting(false);
     }
   }, [isOpen]);
 
-  const handleConfirmBooking = (e: React.FormEvent) => {
+  const handleConfirmBooking = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStep('SUCCESS');
+    if (!selectedDate) {
+      setError('Please select an event date.');
+      return;
+    }
+
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const booking = await postToErp({
+        path: '/api/bookings/public',
+        body: {
+          customerName: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          service: formData.service,
+          eventDate: selectedDate.toISOString(),
+          eventNotes: 'Submitted from nizanwebsite booking modal',
+          source: 'website-booking',
+        },
+      });
+
+      setBookingNumber(String(booking.bookingNumber || 'Pending'));
+      setStep('SUCCESS');
+    } catch (submitError) {
+      setError(
+        submitError instanceof Error ? submitError.message : 'Booking failed'
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // Calendar Logic
@@ -276,11 +313,17 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
                       <button 
                         type="submit"
+                        disabled={submitting}
                         className="w-full bg-navy text-white py-5 text-[11px] font-bold tracking-[0.2em] uppercase hover:bg-gold hover:text-navy transition-all duration-500 flex items-center justify-center gap-3 mt-4 group"
                       >
-                        Confirm Booking
+                        {submitting ? 'Submitting...' : 'Confirm Booking'}
                         <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                       </button>
+                      {error ? (
+                        <p className="text-sm text-red-600" role="alert">
+                          {error}
+                        </p>
+                      ) : null}
                     </form>
                   </motion.div>
                 )}
@@ -323,7 +366,7 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                       </div>
                       <div className="flex justify-between items-center text-sm">
                         <span className="text-navy/40 font-medium">Booking ID</span>
-                        <span className="text-navy font-semibold text-gold">#NIZ-847291</span>
+                        <span className="text-navy font-semibold text-gold">#{bookingNumber}</span>
                       </div>
                     </div>
 
