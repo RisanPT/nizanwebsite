@@ -4,110 +4,263 @@ import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import ParticleCanvas from './ParticleCanvas';
 
-const TOTAL_FRAMES = 240;
-const CACHE_BUSTER = "?v=3";
+const MIN_LOADING_MS = 5000;
+const HERO_VIDEO_SRC = '/video-swap_2026-04-07_03-23-46.mp4';
+const HERO_POSTER_SRC = '/frames/ezgif-frame-001.jpg?v=3';
 
-// Preload first N frames for instant display
-const PRELOAD_COUNT = 20;
+const BRIDAL_STYLES = [
+  { frame: 30, label: 'The Hindu Bride' },
+  { frame: 70, label: 'The Muslim Bride' },
+  { frame: 140, label: 'Christian Elegance' },
+  { frame: 210, label: 'Modern Glamour' },
+];
 
 interface HeroProps {
   onBook: () => void;
 }
 
 export default function Hero({ onBook }: HeroProps) {
-  const [currentFrame, setCurrentFrame] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const [heroReady, setHeroReady] = useState(false);
-  const rafRef = useRef<number>(0);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const [showBridalIcons, setShowBridalIcons] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [minDelayPassed, setMinDelayPassed] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
 
     handleResize();
     window.addEventListener('resize', handleResize);
-    const t = setTimeout(() => setHeroReady(true), 150);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      clearTimeout(t);
     };
   }, []);
 
-  // Preload initial frames for smooth start
   useEffect(() => {
-    for (let i = 1; i <= PRELOAD_COUNT; i++) {
-      const img = new Image();
-      img.src = `/frames/ezgif-frame-${String(i).padStart(3, '0')}.jpg${CACHE_BUSTER}`;
-    }
+    const timer = setTimeout(() => {
+      setShowBridalIcons(true);
+      setMinDelayPassed(true);
+    }, MIN_LOADING_MS);
+
+    return () => clearTimeout(timer);
   }, []);
 
-  // Scroll-driven frame sequencing
   useEffect(() => {
     if (isMobile) {
-      setCurrentFrame(1);
+      setIsLoaded(true);
+      setLoadingProgress(100);
       return;
     }
 
-    let ticking = false;
-
-    const handleScroll = () => {
-      if (!ticking) {
-        rafRef.current = requestAnimationFrame(() => {
-          const heroEl = document.getElementById('home');
-          if (!heroEl) { ticking = false; return; }
-          const heroHeight = heroEl.offsetHeight;
-          const scrollY = window.scrollY;
-          const progress = Math.min(scrollY / (heroHeight - window.innerHeight), 1);
-          const frame = Math.max(1, Math.min(TOTAL_FRAMES, Math.ceil(progress * TOTAL_FRAMES)));
-          setCurrentFrame(frame);
-          ticking = false;
-        });
-        ticking = true;
-      }
+    const poster = new Image();
+    poster.src = HERO_POSTER_SRC;
+    poster.onload = () => {
+      setLoadingProgress(100);
+      setIsLoaded(true);
+    };
+    poster.onerror = () => {
+      setLoadingProgress(100);
+      setIsLoaded(true);
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      cancelAnimationFrame(rafRef.current);
-    };
+    const video = videoRef.current;
+    if (video) {
+      const handleReady = () => {
+        setLoadingProgress(100);
+        setIsLoaded(true);
+      };
+
+      video.addEventListener('loadeddata', handleReady, { once: true });
+      video.load();
+
+      return () => {
+        video.removeEventListener('loadeddata', handleReady);
+      };
+    }
   }, [isMobile]);
 
-  const frameNum = String(currentFrame).padStart(3, '0');
-  const frameSrc = `/frames/ezgif-frame-${frameNum}.jpg${CACHE_BUSTER}`;
-  const mobileFrameSrc = `/frames/ezgif-frame-001.jpg${CACHE_BUSTER}`;
+  // Initial hero activation sequence — wait for BOTH assets and the minimum splash duration.
+  useEffect(() => {
+    if (isLoaded && minDelayPassed) {
+      const t = setTimeout(() => setHeroReady(true), 500);
+      return () => clearTimeout(t);
+    }
+  }, [isLoaded, minDelayPassed]);
+
+  useEffect(() => {
+    if (!isMobile && heroReady && videoRef.current) {
+      const playPromise = videoRef.current.play();
+      if (playPromise) {
+        playPromise.catch(() => {});
+      }
+    }
+  }, [heroReady, isMobile]);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    // Tall scroll container — 400vh gives full scroll range for 240 frames
     <section
       id="home"
       className="relative"
-      style={{ height: isMobile ? '100vh' : '400vh', background: '#060f22' }}
+      style={{ height: '100vh', background: '#060f22' }}
     >
-      {/* Sticky viewport */}
-      <div className="sticky top-0 h-screen overflow-hidden">
+      <div className="relative h-screen overflow-hidden">
 
-        {/* Frame background image — plain <img> for max scroll perf */}
         <motion.div
-          className="absolute inset-0 z-0"
-          initial={{ clipPath: 'inset(0 100% 0 0)' }}
-          animate={heroReady ? { clipPath: 'inset(0 0% 0 0)' } : {}}
-          transition={{ duration: 1.8, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 z-0 bg-navy"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.2 }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            ref={imgRef}
-            src={isMobile ? mobileFrameSrc : frameSrc}
-            alt="Bridal makeup cinematic portrait"
-            className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none"
-            style={{ display: 'block' }}
-          />
+          {isMobile ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={HERO_POSTER_SRC}
+              alt="Bridal makeup cinematic portrait"
+              className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none"
+              style={{ display: 'block' }}
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              muted
+              playsInline
+              preload="metadata"
+              poster={HERO_POSTER_SRC}
+            >
+              <source src={HERO_VIDEO_SRC} type="video/mp4" />
+            </video>
+          )}
         </motion.div>
+
+        {/* Loading Overlay — Full screen luxury splash */}
+        {!heroReady && !isMobile && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            animate={heroReady ? { opacity: 0 } : { opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="fixed inset-0 z-[100] bg-navy flex flex-col items-center justify-center p-6"
+          >
+            <div className="w-full max-w-[400px] flex flex-col items-center space-y-12">
+              
+              {/* Rounded Bridal Icons Sequence */}
+              <div className="flex gap-4 md:gap-6">
+                {BRIDAL_STYLES.map((style, idx) => (
+                  <motion.div
+                    key={style.label}
+                    initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    transition={{ 
+                      delay: idx * 0.8, 
+                      duration: 0.8, 
+                      ease: [0.22, 1, 0.36, 1] 
+                    }}
+                    className="relative group"
+                  >
+                    {/* Animated Border Ring */}
+                    <svg className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] -rotate-90">
+                      <motion.circle
+                        cx="50%"
+                        cy="50%"
+                        r="48%"
+                        fill="none"
+                        stroke="#c9a227"
+                        strokeWidth="1"
+                        strokeDasharray="100 100"
+                        initial={{ strokeDashoffset: 100 }}
+                        animate={{ strokeDashoffset: 0 }}
+                        transition={{ delay: idx * 0.8, duration: 2, ease: "linear" }}
+                      />
+                    </svg>
+
+                    {/* Circular Icon */}
+                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border border-white/10 bg-navy-light relative z-10">
+                      {showBridalIcons ? (
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`/frames/ezgif-frame-${String(style.frame).padStart(3, '0')}.jpg`}
+                            alt={style.label}
+                            loading="lazy"
+                            decoding="async"
+                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+                          />
+                        </>
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-white/10 via-gold/10 to-white/5 animate-pulse" />
+                      )}
+                    </div>
+
+                    {/* Tiny Label */}
+                    <motion.span 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: (idx * 0.8) + 0.4 }}
+                      className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[7px] md:text-[8px] tracking-[0.2em] text-gold/40 uppercase whitespace-nowrap"
+                    >
+                      {style.label.split(' ')[1] || style.label}
+                    </motion.span>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Loader Info */}
+              <div className="w-full max-w-[280px] space-y-8 pt-8">
+                {/* Luxury Text */}
+                <div className="text-center space-y-2">
+                  <motion.span 
+                    animate={{ opacity: [0.4, 1, 0.4] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    className="text-gold text-[10px] font-medium tracking-[0.4em] uppercase block"
+                  >
+                    CRAFTING ARTISTRY
+                  </motion.span>
+                  <div className="font-display text-white/40 text-[9px] tracking-[0.25em] uppercase">
+                    Initializing Cinematic Experience
+                  </div>
+                </div>
+
+                {/* Progress Bar Container */}
+                <div className="relative pt-1">
+                  <div className="flex mb-2 items-center justify-between">
+                    <div>
+                      <span className="text-[10px] font-medium inline-block text-gold/60 tracking-wider">
+                        {loadingProgress}%
+                      </span>
+                    </div>
+                  </div>
+                  <div className="overflow-hidden h-[1px] mb-4 text-xs flex bg-white/10">
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: `${loadingProgress}%` }}
+                      transition={{ type: "spring", stiffness: 50, damping: 20 }}
+                      style={{ width: `${loadingProgress}%` }}
+                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gold"
+                    ></motion.div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Visual background element */}
+            <div className="absolute inset-0 z-[-1] overflow-hidden pointer-events-none opacity-20">
+               <div 
+                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full"
+                 style={{ 
+                   background: 'radial-gradient(circle, rgba(201,162,39,0.1) 0%, transparent 70%)',
+                   filter: 'blur(80px)'
+                 }}
+               />
+            </div>
+          </motion.div>
+        )}
 
         {/* Dark gradient overlay — left-heavy navy fade */}
         <div
