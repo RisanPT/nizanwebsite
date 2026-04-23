@@ -16,7 +16,7 @@ const services = [
     icon: Wand2,
     title: 'Signature Makeup',
     description:
-      'A customized style to enhance unique features with elegance and perfection, creating a timeless and radiant bridal look.',
+      'Our Signature Makeup is a premium, customized service by a professional makeup artist, designed to enhance your natural beauty with elegance and precision. As a trusted bridal makeup artist and bridal makeup specialist, we create flawless, long-lasting bridal makeup and radiant, timeless bridal looks.',
     tag: null,
   },
 ];
@@ -61,8 +61,7 @@ export default function Services() {
             transition={{ delay: 0.2, duration: 0.6 }}
             className="text-navy/60 text-lg max-w-xl mx-auto leading-relaxed"
           >
-            Premium beauty experiences crafted with the finest products and
-            techniques for your most unforgettable moments.
+            We use only the world&apos;s finest, dermatologically trusted, luxury-grade products — because you deserve beauty that is as immaculate as the moment itself.
           </motion.p>
         </div>
 

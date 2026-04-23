@@ -1,17 +1,33 @@
 'use client';
 
+import Link from 'next/link';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 
 const footerLinks = {
-  Services: ['Bridal Elegance', 'Event Glamour', 'Editorial & Fashion', 'Skin Preparations'],
-  Company: ['About Nizan', 'Our Portfolio', 'Testimonials', 'Contact Us'],
-  Legal: ['Privacy Policy', 'Terms of Service', 'Refund Policy'],
+  Explore: [
+    { label: 'About Nizan', href: '/about' },
+    { label: 'Services', href: '/services' },
+    { label: 'Portfolio', href: '/portfolio' },
+    { label: 'Our Team', href: '/team' },
+    { label: 'Contact Us', href: '/contact' },
+  ],
+  Services: [
+    { label: 'Bridal Elegance', href: '/services' },
+    { label: 'Event Glamour', href: '/services' },
+    { label: 'Editorial & Fashion', href: '/portfolio' },
+    { label: 'Skin Preparations', href: '/services' },
+  ],
+  Legal: [
+    { label: 'Privacy Policy', href: '/contact' },
+    { label: 'Terms of Service', href: '/contact' },
+    { label: 'Refund Policy', href: '/contact' },
+  ],
 };
 
 const socials = [
-  { icon: Instagram, label: 'Instagram', href: '#' },
-  { icon: Facebook, label: 'Facebook', href: '#' },
-  { icon: Youtube, label: 'YouTube', href: '#' },
+  { icon: Instagram, label: 'Instagram', href: 'https://www.instagram.com/nizanmakeovers' },
+  { icon: Facebook, label: 'Facebook', href: 'https://www.facebook.com/nizanmakeover' },
+  { icon: Youtube, label: 'YouTube', href: 'https://www.youtube.com/@nizanmakeovers' },
 ];
 
 export default function Footer() {
@@ -30,8 +46,9 @@ export default function Footer() {
               />
             </div>
             <p className="text-white/50 text-sm leading-relaxed max-w-xs mb-8">
-              Redefining luxury beauty with artistry, precision, and the finest
-              cosmetics available. Every look is a masterpiece.
+              Follow our transformations on Instagram — masterclass announcements,
+              behind-the-scenes, and stay updated with the latest looks, tips, and
+              exclusive offers.
             </p>
             {/* Socials */}
             <div className="flex gap-4">
@@ -56,14 +73,14 @@ export default function Footer() {
               </h4>
               <ul className="space-y-3">
                 {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
                       className="text-white/45 hover:text-gold text-sm transition-colors duration-300 flex items-center gap-2 group"
                     >
                       <span className="w-3 h-px bg-gold/0 group-hover:bg-gold/60 transition-all duration-300" />
-                      {link}
-                    </a>
+                      {link.label}
+                    </Link>
                   </li>
                 ))}
               </ul>

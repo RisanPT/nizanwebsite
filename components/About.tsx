@@ -4,19 +4,19 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const highlights = [
-  { label: 'Brides Transformed', value: '2000+' },
-  { label: 'Years of Artistry', value: '10+' },
-  { label: 'Cities Served', value: '4' },
-  { label: 'Academy Students', value: '500+' },
+  { label: 'Bridal Transformations', value: '2000+' },
+  { label: 'Years Experience', value: '8+' },
+  { label: 'Masterclasses', value: '10+' },
+  { label: 'Expert Artists', value: 'Team N' },
 ];
 
 const specialties = [
-  'Hindu Bridal Transformations',
-  'Muslim Bridal Artistry',
-  'Christian Bridal Elegance',
-  'Dusky Airbrush Makeup',
-  'Professional Masterclasses',
-  'Celebrity & Editorial Looks',
+  'Hindu Bridal Makeup',
+  'Christian Bridal Makeup',
+  'Muslim Bridal Makeup',
+  'Celebrity Makeup',
+  'Masterclass – India & UAE',
+  'Signature Airbrush Artistry',
 ];
 
 export default function About() {
@@ -80,25 +80,14 @@ export default function About() {
               {...fadeUp(0.2)}
               className="text-navy/80 text-lg leading-[1.9] font-light"
             >
-              <span className="text-gold font-semibold">Nizan Makeovers</span> is a premium
-              bridal makeup and professional training brand founded by{' '}
-              <span className="text-navy font-medium">Feeniya Nizan</span>, a celebrated
-              celebrity makeup artist and educator. Based in{' '}
-              <span className="font-medium text-navy">Calicut and Chennai</span>, we specialise
-              in elegant bridal transformations for{' '}
-              <span className="text-gold font-medium">
-                Hindu, Muslim, and Christian brides
-              </span>
-              , with strong expertise in dusky airbrush makeup.
+              <span className="text-gold font-semibold">Nizan Makeovers</span> is a top celebrity makeup artist in Kerala, founded by <span className="text-navy font-medium">Feeniya Nizan</span>, a leading professional makeup artist. We specialize in bridal makeup, wedding makeup, and celebrity beauty services. As a trusted bridal makeup artist and bridal makeup specialist, we offer premium bridal makeup services, including celebrity makeup and customized bridal looks.
             </motion.p>
 
             <motion.p
               {...fadeUp(0.28)}
               className="text-navy/60 text-base leading-[1.9] font-light"
             >
-              Nizan Makeovers Academy also offers professional masterclasses designed to build
-              skilled and confident makeup artists — nurturing the next generation of bridal
-              artistry across India.
+              Our expertise in <span className="text-gold font-medium">Airbrush and Signature Makeup</span> ensures flawless, long-lasting results. If you are looking for a bridal makeup artist in Kerala, Nizan Makeovers delivers a luxury beauty experience with perfection and elegance. Nizan Makeovers is also the parent company of <span className="text-gold font-medium">Team N Makeovers</span>, a fast-growing beauty brand across Kerala and Tamil Nadu. Together, we continue to set high standards in the industry through expert services, strong team presence, and professional excellence.
             </motion.p>
 
             {/* Specialties grid */}
@@ -185,7 +174,7 @@ export default function About() {
               transition={{ delay: 0.55, duration: 0.7, ease: [0.22, 1, 0.36, 1] as const }}
               className="absolute -left-6 bottom-16 bg-navy/90 backdrop-blur-md border border-gold/25 px-6 py-5 shadow-[0_8px_40px_rgba(0,0,0,0.3)]"
             >
-              <p className="font-display text-3xl text-gold font-semibold">10+</p>
+              <p className="font-display text-3xl text-gold font-semibold">8+</p>
               <p className="text-white/60 text-[10px] tracking-widest uppercase mt-1">
                 Years of Excellence
               </p>

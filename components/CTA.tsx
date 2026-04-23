@@ -66,7 +66,7 @@ export default function CTA({ onBook }: CTAProps) {
           animate={inView ? { opacity: 1, y: 0 } : {}}
           className="text-gold text-xs font-medium tracking-[0.3em] uppercase mb-6 block"
         >
-          Your Dream Look Awaits
+          Your Most Beautiful Moment Awaits
         </motion.span>
 
         <motion.h2
@@ -85,8 +85,7 @@ export default function CTA({ onBook }: CTAProps) {
           transition={{ delay: 0.3, duration: 0.7 }}
           className="text-white/65 text-lg md:text-xl max-w-xl mx-auto mb-12 leading-relaxed"
         >
-          Schedule your personalized consultation and step into a world of
-          ultimate beauty, artistry, and regal elegance.
+          Book your consultation with a bridal makeup artist and experience premium bridal makeup services with the best makeup artist in Kerala.
         </motion.p>
 
         <motion.div

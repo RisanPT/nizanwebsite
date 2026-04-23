@@ -112,22 +112,22 @@ export default function Contact() {
               {
                 icon: '📍',
                 label: 'Studio Location',
-                value: 'Available on request — home visits welcome',
+                value: 'Available on request — home visits warmly welcomed India · UAE · Malaysia',
               },
               {
                 icon: '📞',
                 label: 'Phone / WhatsApp',
-                value: '+91 00000 00000',
+                value: '+91 97465 14181',
               },
               {
                 icon: '✉️',
                 label: 'Email',
-                value: 'hello@nizanmakeovers.com',
+                value: 'nizanmakeovers@gmail.com',
               },
               {
                 icon: '🕐',
                 label: 'Working Hours',
-                value: 'Mon – Sat: 9 AM – 7 PM',
+                value: 'Always Open',
               },
             ].map((item) => (
               <div key={item.label} className="flex gap-5 items-start">

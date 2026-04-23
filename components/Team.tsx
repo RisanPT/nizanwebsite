@@ -6,30 +6,21 @@ import { motion, useInView, Variants } from 'framer-motion';
 const team = [
   {
     name: 'Feeniya Nizan',
-    role: 'Founder & Lead Bridal Artist',
-    speciality: 'Hindu · Muslim · Christian Bridal Looks',
-    bio: 'A celebrated celebrity makeup artist with over 10 years of experience, Feeniya has transformed 2000+ brides across India with her signature blend of elegance and precision.',
+    role: 'Founder & CEO',
+    speciality: 'Lead Bridal Artist | Airbrush | Educator',
+    bio: "One of India's most revered celebrity makeup artists with 10+ years of mastery and 2,000+ bridal transformations. Conducted 12 prestigious masterclasses across Kerala, Tamil Nadu & Dubai. Her artistry has graced celebrities, public figures, and thousands of cherished brides across South Asia and the UAE.",
     initials: 'FN',
     accent: '#c9a227',
     tag: 'Founder',
   },
   {
-    name: 'Nisha Fathima',
-    role: 'Senior Makeup Artist',
-    speciality: 'Airbrush & Dusky Skin Specialist',
-    bio: 'Expert in long-lasting airbrush techniques, Nisha brings a flawless, natural finish to every look — perfectly suited for weddings and long-duration events.',
-    initials: 'NF',
+    name: 'Jasim Rasheed',
+    role: 'Co-Founder & CFO',
+    speciality: 'Strategy | Finance | Brand Architecture',
+    bio: 'The strategic and financial architect of Nizan Makeovers. With sharp business acumen and a deep understanding of the luxury service landscape, Jasim has shaped Nizan Makeovers into the premium, globally reaching brand it is today.',
+    initials: 'JR',
     accent: '#c9a227',
-    tag: null,
-  },
-  {
-    name: 'Amara Selin',
-    role: 'Makeup Artist & Academy Trainer',
-    speciality: 'Editorial · Fashion · Celebrity Looks',
-    bio: 'Trained in cutting-edge editorial styling, Amara brings avant-garde artistry to fashion shoots, runway shows, and high-profile events.',
-    initials: 'AS',
-    accent: '#c9a227',
-    tag: null,
+    tag: 'Co-Founder',
   },
 ];
 
@@ -110,7 +101,7 @@ export default function Team() {
         </div>
 
         {/* Team Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {team.map((member, i) => (
             <motion.div
               key={member.name}

@@ -1,53 +1,205 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import Link from 'next/link';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
+import { ERP_API_URL, getFromErp } from '@/lib/erp';
 
-const portfolioItems = [
+export interface PortfolioCard {
+  src: string;
+  alt: string;
+  title: string;
+  category: string;
+  gridClass: string;
+  aspect: string;
+  parallaxDir: 1 | -1;
+}
+
+export const portfolioItems: PortfolioCard[] = [
   {
-    src: '/frames/ezgif-frame-030.jpg',
-    alt: 'The Classic Bride',
-    title: 'The Classic Bride',
+    src: '/portfolio_images/photo-output (24).JPEG',
+    alt: 'Complete Bridal Transformation',
+    title: 'Complete Bridal',
     category: 'Bridal Makeover',
     gridClass: 'col-span-12 md:col-span-8',
     aspect: 'aspect-[16/9]',
     parallaxDir: 1,
   },
   {
-    src: '/frames/ezgif-frame-070.jpg',
-    alt: 'Evening Gala Glamour',
-    title: 'Evening Gala',
+    src: '/portfolio_images/photo-output (23).JPEG',
+    alt: 'Elegant Fashion Makeover',
+    title: 'Fashion Forward',
+    category: 'Editorial',
+    gridClass: 'col-span-12 md:col-span-4',
+    aspect: 'aspect-[3/4]',
+    parallaxDir: -1,
+  },
+  {
+    src: '/portfolio_images/photo-output (21).JPEG',
+    alt: 'Masterclass Signature Look',
+    title: 'Masterclass Look',
+    category: 'Celebrity Makeup',
+    gridClass: 'col-span-12 md:col-span-8',
+    aspect: 'aspect-[16/9]',
+    parallaxDir: 1,
+  },
+  {
+    src: '/portfolio_images/photo-output (20).JPEG',
+    alt: 'Radiant Glow Look',
+    title: 'Radiant Glow',
+    category: 'Bridal Makeover',
+    gridClass: 'col-span-12 md:col-span-4',
+    aspect: 'aspect-[3/4]',
+    parallaxDir: -1,
+  },
+  {
+    src: '/portfolio_images/photo-output (19).JPEG',
+    alt: 'Exquisite Bridal Detail',
+    title: 'Exquisite Detail',
+    category: 'Bridal Makeover',
+    gridClass: 'col-span-12 md:col-span-4',
+    aspect: 'aspect-[3/4]',
+    parallaxDir: 1,
+  },
+  {
+    src: '/portfolio_images/photo-output (18).JPEG',
+    alt: 'Flawless Editorial Makeup',
+    title: 'Editorial Edge',
+    category: 'Editorial',
+    gridClass: 'col-span-12 md:col-span-8',
+    aspect: 'aspect-[16/9]',
+    parallaxDir: -1,
+  },
+  {
+    src: '/portfolio_images/photo-output (17).JPEG',
+    alt: 'Royal Bridal Makeover',
+    title: 'Royal Bride',
+    category: 'Bridal Makeover',
+    gridClass: 'col-span-12 md:col-span-4',
+    aspect: 'aspect-[3/4]',
+    parallaxDir: 1,
+  },
+  {
+    src: '/portfolio_images/photo-output (16).JPEG',
+    alt: 'Timeless Beauty Look',
+    title: 'Timeless Beauty',
+    category: 'Editorial',
+    gridClass: 'col-span-12 md:col-span-8',
+    aspect: 'aspect-[16/9]',
+    parallaxDir: -1,
+  },
+  {
+    src: '/portfolio_images/photo-output (14).JPEG',
+    alt: 'Modern Bridal Transformation',
+    title: 'Modern Bride',
+    category: 'Bridal Makeover',
+    gridClass: 'col-span-12 md:col-span-4',
+    aspect: 'aspect-[3/4]',
+    parallaxDir: 1,
+  },
+  {
+    src: '/portfolio_images/photo-output (13).JPEG',
+    alt: 'Signature Glow Finish',
+    title: 'Signature Glow',
+    category: 'Bridal Makeover',
+    gridClass: 'col-span-12 md:col-span-8',
+    aspect: 'aspect-[16/9]',
+    parallaxDir: -1,
+  },
+  {
+    src: '/portfolio_images/photo-output (12).JPEG',
+    alt: 'Luxury Airbrush Artistry',
+    title: 'Luxury Airbrush',
+    category: 'Airbrush Artistry',
+    gridClass: 'col-span-12 md:col-span-4',
+    aspect: 'aspect-[3/4]',
+    parallaxDir: 1,
+  },
+  {
+    src: '/portfolio_images/photo-output (9).JPEG',
+    alt: 'Elegant Event Makeup',
+    title: 'Evening Elegance',
     category: 'Event Glamour',
     gridClass: 'col-span-12 md:col-span-4',
     aspect: 'aspect-[3/4]',
     parallaxDir: -1,
   },
   {
-    src: '/frames/ezgif-frame-140.jpg',
-    alt: 'Avant-Garde Editorial',
-    title: 'Avant-Garde',
-    category: 'Editorial',
+    src: '/portfolio_images/photo-output.JPEG',
+    alt: 'Nizan Signature Bridal Look',
+    title: 'Signature Bridal',
+    category: 'Bridal Makeover',
+    gridClass: 'col-span-12 md:col-span-8',
+    aspect: 'aspect-[16/9]',
+    parallaxDir: 1,
+  },
+];
+
+
+
+
+const layoutPresets: Array<Pick<PortfolioCard, 'gridClass' | 'aspect' | 'parallaxDir'>> = [
+  {
+    gridClass: 'col-span-12 md:col-span-8',
+    aspect: 'aspect-[16/9]',
+    parallaxDir: 1,
+  },
+  {
+    gridClass: 'col-span-12 md:col-span-4',
+    aspect: 'aspect-[3/4]',
+    parallaxDir: -1,
+  },
+  {
     gridClass: 'col-span-12 md:col-span-4',
     aspect: 'aspect-[3/4]',
     parallaxDir: 1,
   },
   {
-    src: '/frames/ezgif-frame-210.jpg',
-    alt: 'Flawless Natural Look',
-    title: 'Flawless Canvas',
-    category: 'Natural Beauty',
     gridClass: 'col-span-12 md:col-span-8',
     aspect: 'aspect-[16/9]',
     parallaxDir: -1,
   },
 ];
 
+interface BackendPortfolioItem {
+  _id: string;
+  title: string;
+  category?: string;
+  altText?: string;
+  imageUrl: string;
+  status?: string;
+  sortOrder?: number;
+}
+
+const toAbsolutePortfolioImageUrl = (imageUrl: string) => {
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl;
+  }
+
+  const normalized = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+  return `${ERP_API_URL}${normalized}`;
+};
+
 function ParallaxPortfolioItem({
-  src, alt, title, category, gridClass, aspect, parallaxDir, index,
-}: typeof portfolioItems[0] & { index: number }) {
+  src,
+  alt,
+  title,
+  category,
+  gridClass,
+  aspect,
+  parallaxDir,
+  index,
+}: PortfolioCard & { index: number }) {
   const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const y = useTransform(scrollYProgress, [0, 1], [parallaxDir * 40, parallaxDir * -40]);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ['start end', 'end start'],
+  });
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [parallaxDir * 40, parallaxDir * -40]
+  );
   const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
@@ -56,14 +208,14 @@ function ParallaxPortfolioItem({
       className={`${gridClass} relative overflow-hidden group cursor-pointer`}
       initial={{ opacity: 0, scale: 0.96, y: 30 }}
       animate={inView ? { opacity: 1, scale: 1, y: 0 } : {}}
-      transition={{ delay: index * 0.13, duration: 0.75, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        delay: index * 0.13,
+        duration: 0.75,
+        ease: [0.22, 1, 0.36, 1],
+      }}
     >
       <div className={`${aspect} relative overflow-hidden`}>
-        {/* Parallax image wrapper */}
-        <motion.div
-          className="absolute inset-[-10%] w-[120%] h-[120%]"
-          style={{ y }}
-        >
+        <motion.div className="absolute inset-[-10%] w-[120%] h-[120%]" style={{ y }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
@@ -72,17 +224,16 @@ function ParallaxPortfolioItem({
           />
         </motion.div>
 
-        {/* Gradient overlay */}
         <div
           className="absolute inset-0 transition-opacity duration-500"
           style={{
-            background: 'linear-gradient(to top, rgba(6,15,34,0.95) 0%, rgba(11,27,59,0.3) 55%, transparent 100%)',
+            background:
+              'linear-gradient(to top, rgba(6,15,34,0.95) 0%, rgba(11,27,59,0.3) 55%, transparent 100%)',
             opacity: 0.7,
           }}
         />
         <div className="absolute inset-0 bg-gold/0 group-hover:bg-gold/5 transition-colors duration-500" />
 
-        {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-6 lg:p-8 transform translate-y-1 group-hover:translate-y-0 transition-transform duration-400">
           <span className="text-gold text-[10px] tracking-[0.28em] uppercase font-semibold block mb-2">
             {category}
@@ -92,7 +243,6 @@ function ParallaxPortfolioItem({
           </h3>
         </div>
 
-        {/* Gold corner brackets */}
         <div className="absolute top-4 right-4 w-7 h-7 border-t-2 border-r-2 border-gold opacity-0 group-hover:opacity-100 transition-all duration-400 translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0" />
         <div className="absolute bottom-4 left-4 w-7 h-7 border-b-2 border-l-2 border-gold opacity-0 group-hover:opacity-100 transition-all duration-400 -translate-x-2 translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0" />
       </div>
@@ -100,14 +250,67 @@ function ParallaxPortfolioItem({
   );
 }
 
-export default function Portfolio() {
+interface PortfolioProps {
+  items?: PortfolioCard[];
+  showViewAll?: boolean;
+  maxItems?: number;
+}
+
+export default function Portfolio({
+  items,
+  showViewAll = true,
+  maxItems,
+}: PortfolioProps) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
+  const [remoteItems, setRemoteItems] = useState<PortfolioCard[]>([]);
+
+  useEffect(() => {
+    if (items && items.length > 0) return;
+
+    const loadPortfolio = async () => {
+      try {
+        const payload = await getFromErp<BackendPortfolioItem[]>('/api/portfolio/public');
+        const list = Array.isArray(payload) ? payload : [];
+
+        const mapped = list.map((item, index) => {
+          const preset = layoutPresets[index % layoutPresets.length];
+          return {
+            src: toAbsolutePortfolioImageUrl(item.imageUrl),
+            alt: item.altText?.trim() || item.title,
+            title: item.title,
+            category: item.category?.trim() || 'Portfolio',
+            ...preset,
+          };
+        });
+
+        setRemoteItems(mapped);
+      } catch {
+        setRemoteItems([]);
+      }
+    };
+
+    loadPortfolio();
+  }, [items]);
+
+  const resolvedItems = useMemo(() => {
+    const source =
+      items && items.length > 0
+        ? items
+        : remoteItems.length > 0
+          ? remoteItems
+          : portfolioItems;
+
+    if (typeof maxItems === 'number') {
+      return source.slice(0, Math.max(0, maxItems));
+    }
+
+    return source;
+  }, [items, maxItems, remoteItems]);
 
   return (
     <section id="portfolio" className="section-dark py-28 lg:py-36" ref={ref}>
       <div className="max-w-[1320px] mx-auto px-6 lg:px-8">
-        {/* Header */}
         <div className="text-center mb-20">
           <motion.span
             initial={{ opacity: 0, y: 10 }}
@@ -136,24 +339,27 @@ export default function Portfolio() {
           </motion.p>
         </div>
 
-        {/* Asymmetric Masonry Grid */}
         <div className="grid grid-cols-12 gap-4 md:gap-5">
-          {portfolioItems.map((item, i) => (
-            <ParallaxPortfolioItem key={item.title} {...item} index={i} />
+          {resolvedItems.map((item, i) => (
+            <ParallaxPortfolioItem key={`${item.src}-${i}`} {...item} index={i} />
           ))}
         </div>
 
-        {/* View all CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.65, duration: 0.6 }}
-          className="text-center mt-14"
-        >
-          <button className="shimmer-btn border border-gold/40 hover:border-gold hover:bg-gold hover:text-navy text-gold text-[11px] tracking-[0.22em] uppercase px-10 py-4 transition-all duration-400 font-medium">
-            View Full Portfolio
-          </button>
-        </motion.div>
+        {showViewAll && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ delay: 0.65, duration: 0.6 }}
+            className="text-center mt-14"
+          >
+            <Link
+              href="/portfolio"
+              className="shimmer-btn inline-flex border border-gold/40 hover:border-gold hover:bg-gold hover:text-navy text-gold text-[11px] tracking-[0.22em] uppercase px-10 py-4 transition-all duration-400 font-medium"
+            >
+              View Full Portfolio
+            </Link>
+          </motion.div>
+        )}
       </div>
     </section>
   );

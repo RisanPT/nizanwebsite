@@ -21,11 +21,12 @@ interface HeroProps {
 
 export default function Hero({ onBook }: HeroProps) {
   const [isMobile, setIsMobile] = useState(false);
-  const [heroReady, setHeroReady] = useState(false);
-  const [showBridalIcons, setShowBridalIcons] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [minDelayPassed, setMinDelayPassed] = useState(false);
+  const [heroReady, setHeroReady] = useState(true);
+  const [showBridalIcons, setShowBridalIcons] = useState(true);
+  const [loadingProgress, setLoadingProgress] = useState(100);
+  const [isLoaded, setIsLoaded] = useState(true);
+  const [minDelayPassed, setMinDelayPassed] = useState(true);
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -39,74 +40,7 @@ export default function Hero({ onBook }: HeroProps) {
     };
   }, []);
 
-  useEffect(() => {
-    if (isMobile) {
-      setShowBridalIcons(true);
-      setMinDelayPassed(true);
-      setHeroReady(true);
-      return;
-    }
 
-    const timer = setTimeout(() => {
-      setShowBridalIcons(true);
-      setMinDelayPassed(true);
-    }, MIN_LOADING_MS);
-
-    return () => clearTimeout(timer);
-  }, [isMobile]);
-
-  useEffect(() => {
-    if (isMobile) {
-      setIsLoaded(true);
-      setLoadingProgress(100);
-      return;
-    }
-
-    const poster = new Image();
-    poster.src = HERO_POSTER_SRC;
-    poster.onload = () => {
-      setLoadingProgress(100);
-      setIsLoaded(true);
-    };
-    poster.onerror = () => {
-      setLoadingProgress(100);
-      setIsLoaded(true);
-    };
-
-    const video = videoRef.current;
-    if (video) {
-      const handleReady = () => {
-        setLoadingProgress(100);
-        setIsLoaded(true);
-      };
-
-      video.addEventListener('loadeddata', handleReady, { once: true });
-      video.load();
-
-      return () => {
-        video.removeEventListener('loadeddata', handleReady);
-      };
-    }
-  }, [isMobile]);
-
-  // Initial hero activation sequence — wait for BOTH assets and the minimum splash duration.
-  useEffect(() => {
-    if (isMobile) return;
-
-    if (isLoaded && minDelayPassed) {
-      const t = setTimeout(() => setHeroReady(true), 500);
-      return () => clearTimeout(t);
-    }
-  }, [isLoaded, isMobile, minDelayPassed]);
-
-  useEffect(() => {
-    if (!isMobile && heroReady && videoRef.current) {
-      const playPromise = videoRef.current.play();
-      if (playPromise) {
-        playPromise.catch(() => {});
-      }
-    }
-  }, [heroReady, isMobile]);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -138,152 +72,20 @@ export default function Hero({ onBook }: HeroProps) {
             <video
               ref={videoRef}
               className="w-full h-full object-cover"
+              autoPlay
+              loop
               muted
               playsInline
-              preload="metadata"
+              preload="auto"
               poster={HERO_POSTER_SRC}
             >
+
               <source src={HERO_VIDEO_SRC} type="video/mp4" />
             </video>
           )}
         </motion.div>
 
-        {/* Loading Overlay — Full screen luxury splash */}
-        {!heroReady && !isMobile && (
-          <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            animate={heroReady ? { opacity: 0 } : { opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="fixed inset-0 z-[100] bg-navy flex flex-col items-center justify-center p-6"
-          >
-            <div className="w-full max-w-[400px] flex flex-col items-center space-y-12">
-              
-              {/* Brand Logo in Loader */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 1.2, ease: "easeOut" }}
-                className="mb-8"
-              >
-                <img 
-                  src="/nizan_logo_white.png" 
-                  alt="Nizan Makeovers Logo" 
-                  className="h-32 md:h-48 w-auto object-contain"
-                />
-              </motion.div>
 
-              {/* Rounded Bridal Icons Sequence */}
-              <div className="flex gap-4 md:gap-6">
-                {BRIDAL_STYLES.map((style, idx) => (
-                  <motion.div
-                    key={style.label}
-                    initial={{ opacity: 0, scale: 0.5, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ 
-                      delay: idx * 0.8, 
-                      duration: 0.8, 
-                      ease: [0.22, 1, 0.36, 1] 
-                    }}
-                    className="relative group"
-                  >
-                    {/* Animated Border Ring */}
-                    <svg className="absolute -inset-2 w-[calc(100%+16px)] h-[calc(100%+16px)] -rotate-90">
-                      <motion.circle
-                        cx="50%"
-                        cy="50%"
-                        r="48%"
-                        fill="none"
-                        stroke="#c9a227"
-                        strokeWidth="1"
-                        strokeDasharray="100 100"
-                        initial={{ strokeDashoffset: 100 }}
-                        animate={{ strokeDashoffset: 0 }}
-                        transition={{ delay: idx * 0.8, duration: 2, ease: "linear" }}
-                      />
-                    </svg>
-
-                    {/* Circular Icon */}
-                    <div className="w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden border border-white/10 bg-navy-light relative z-10">
-                      {showBridalIcons ? (
-                        <>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={`/frames/ezgif-frame-${String(style.frame).padStart(3, '0')}.jpg`}
-                            alt={style.label}
-                            loading="lazy"
-                            decoding="async"
-                            className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                          />
-                        </>
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-white/10 via-gold/10 to-white/5 animate-pulse" />
-                      )}
-                    </div>
-
-                    {/* Tiny Label */}
-                    <motion.span 
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: (idx * 0.8) + 0.4 }}
-                      className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[7px] md:text-[8px] tracking-[0.2em] text-gold/40 uppercase whitespace-nowrap"
-                    >
-                      {style.label.split(' ')[1] || style.label}
-                    </motion.span>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Loader Info */}
-              <div className="w-full max-w-[280px] space-y-8 pt-8">
-                {/* Luxury Text */}
-                <div className="text-center space-y-2">
-                  <motion.span 
-                    animate={{ opacity: [0.4, 1, 0.4] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                    className="text-gold text-[10px] font-medium tracking-[0.4em] uppercase block"
-                  >
-                    CRAFTING ARTISTRY
-                  </motion.span>
-                  <div className="font-display text-white/40 text-[9px] tracking-[0.25em] uppercase">
-                    Initializing Cinematic Experience
-                  </div>
-                </div>
-
-                {/* Progress Bar Container */}
-                <div className="relative pt-1">
-                  <div className="flex mb-2 items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-medium inline-block text-gold/60 tracking-wider">
-                        {loadingProgress}%
-                      </span>
-                    </div>
-                  </div>
-                  <div className="overflow-hidden h-[1px] mb-4 text-xs flex bg-white/10">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${loadingProgress}%` }}
-                      transition={{ type: "spring", stiffness: 50, damping: 20 }}
-                      style={{ width: `${loadingProgress}%` }}
-                      className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-gold"
-                    ></motion.div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Visual background element */}
-            <div className="absolute inset-0 z-[-1] overflow-hidden pointer-events-none opacity-20">
-               <div 
-                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full"
-                 style={{ 
-                   background: 'radial-gradient(circle, rgba(201,162,39,0.1) 0%, transparent 70%)',
-                   filter: 'blur(80px)'
-                 }}
-               />
-            </div>
-          </motion.div>
-        )}
 
         {/* Dark gradient overlay — left-heavy navy fade */}
         <div
@@ -316,7 +118,8 @@ export default function Hero({ onBook }: HeroProps) {
         <ParticleCanvas isMobile={isMobile} />
 
         {/* ── Hero Content ─────────────────────────────── */}
-        <div className="relative z-[3] h-full flex items-center">
+        <div className="relative z-[3] h-full flex items-center pt-24 md:pt-32">
+
           <div className="max-w-[1320px] mx-auto px-6 lg:px-12 w-full">
             <div className="max-w-2xl">
 
@@ -329,7 +132,7 @@ export default function Hero({ onBook }: HeroProps) {
               >
                 <div className="w-8 h-px bg-gold" />
                 <span className="text-gold text-[11px] font-medium tracking-[0.35em] uppercase">
-                  Celebrity Makeup Artist
+                  Luxury bridal makeup artist
                 </span>
                 <div className="w-8 h-px bg-gold" />
               </motion.div>
@@ -342,10 +145,8 @@ export default function Hero({ onBook }: HeroProps) {
                 className="font-display font-light text-white leading-[1.05] tracking-tight mb-8"
                 style={{ fontSize: 'clamp(2.6rem, 6vw, 5rem)' }}
               >
-                Professional{' '}
                 <span className="relative italic">
-                  Bridal
-                  {/* Gold underline — draws left to right */}
+                  Turning your dream
                   <motion.span
                     initial={{ scaleX: 0 }}
                     animate={heroReady ? { scaleX: 1 } : {}}
@@ -363,7 +164,7 @@ export default function Hero({ onBook }: HeroProps) {
                     backgroundClip: 'text',
                   }}
                 >
-                  Makeup Services
+                  Bridal look into reality
                 </span>
               </motion.h1>
 
@@ -374,10 +175,7 @@ export default function Hero({ onBook }: HeroProps) {
                 transition={{ delay: 1.5, duration: 0.8, ease: 'easeOut' }}
                 className="text-white/70 text-base md:text-lg font-light leading-relaxed mb-10 max-w-xl"
               >
-                Soft glam. Timeless beauty. Unforgettable moments.<br />
-                <span className="text-white/50 text-sm mt-2 block">
-                  Professional Airbrush Bridal Makeup for weddings, engagements, and special events — specializing in Hindu, Christian &amp; Muslim bridal looks. Luxury services also available for celebrities and public figures.
-                </span>
+                Nizan Makeovers is one of Kerala’s leading luxury bridal makeup studios, founded by Feeniya Nizan, a renowned bridal makeup artist in India. Known for expert Airbrush and Signature Makeup, the studio has beautifully transformed over 2,000 brides across India and the UAE.
               </motion.p>
 
               {/* CTA Buttons */}
@@ -413,9 +211,9 @@ export default function Hero({ onBook }: HeroProps) {
                 className="flex gap-8 pt-8 border-t border-white/10"
               >
                 {[
-                  { n: '500+', label: 'Happy Brides' },
+                  { n: '2000+', label: 'Bridal Transformations' },
                   { n: '8+', label: 'Years Expertise' },
-                  { n: '100%', label: 'Luxury Products' },
+                  { n: '10+', label: 'Masterclasses' },
                 ].map((s) => (
                   <div key={s.label}>
                     <div className="font-display text-2xl md:text-3xl font-light text-gold leading-none mb-1">

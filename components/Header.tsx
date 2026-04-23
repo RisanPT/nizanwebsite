@@ -1,15 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
 const navLinks = [
-  { label: 'About Us', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Our Works', href: '#portfolio' },
-  { label: 'Our Team', href: '#team' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'About Us', href: '#about', pageHref: '/about' },
+  { label: 'Services', href: '#services', pageHref: '/services' },
+  { label: 'Our Works', href: '#portfolio', pageHref: '/portfolio' },
+  { label: 'Our Team', href: '#team', pageHref: '/team' },
+  { label: 'Contact', href: '#contact', pageHref: '/contact' },
 ];
 
 interface HeaderProps {
@@ -19,6 +21,7 @@ interface HeaderProps {
 export default function Header({ onBook }: HeaderProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -32,6 +35,11 @@ export default function Header({ onBook }: HeaderProps) {
   };
 
   const handleNavClick = (href: string) => {
+    if (pathname !== '/') {
+      setMobileOpen(false);
+      return;
+    }
+
     const id = href.replace('#', '');
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -50,33 +58,40 @@ export default function Header({ onBook }: HeaderProps) {
       }`}
     >
       <div className="max-w-[1320px] mx-auto px-6 lg:px-8 py-2 flex items-center justify-between">
-        <motion.a
-          href="#home"
-          onClick={(e) => { e.preventDefault(); handleNavClick('#home'); }}
+        <motion.div
           className="flex items-center"
           whileHover={{ scale: 1.02 }}
         >
-          <img 
-            src="/nizan_logo_white.png" 
-            alt="Nizan Makeovers Logo" 
-            className={`transition-all duration-500 object-contain w-auto ${
-              scrolled ? 'h-16 md:h-20' : 'h-24 md:h-32'
-            }`}
-          />
-        </motion.a>
+          <Link href="/">
+            <img 
+              src="/nizan_logo_white.png" 
+              alt="Nizan Makeovers Logo" 
+              className={`transition-all duration-500 object-contain w-auto ${
+                scrolled ? 'h-16 md:h-20' : 'h-24 md:h-32'
+              }`}
+            />
+          </Link>
+        </motion.div>
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
-              href={link.href}
-              onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
+              href={pathname === '/' ? link.href : link.pageHref}
+              onClick={(e) => {
+                if (pathname === '/') {
+                  e.preventDefault();
+                  handleNavClick(link.href);
+                } else {
+                  setMobileOpen(false);
+                }
+              }}
               className="text-xs font-medium tracking-[0.15em] uppercase text-white/70 hover:text-gold transition-colors duration-300 relative group"
             >
               {link.label}
               <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-gold transition-all duration-300 group-hover:w-full" />
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -114,17 +129,27 @@ export default function Header({ onBook }: HeaderProps) {
           >
             <div className="px-6 py-6 flex flex-col gap-5">
               {navLinks.map((link, i) => (
-                <motion.a
+                <motion.div
                   key={link.label}
-                  href={link.href}
-                  onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.06 }}
                   className="text-sm font-medium tracking-[0.15em] uppercase text-white/70 hover:text-gold transition-colors"
                 >
-                  {link.label}
-                </motion.a>
+                  <Link
+                    href={pathname === '/' ? link.href : link.pageHref}
+                    onClick={(e) => {
+                      if (pathname === '/') {
+                        e.preventDefault();
+                        handleNavClick(link.href);
+                      } else {
+                        setMobileOpen(false);
+                      }
+                    }}
+                  >
+                    {link.label}
+                  </Link>
+                </motion.div>
               ))}
               <button
                 onClick={handleBooking}

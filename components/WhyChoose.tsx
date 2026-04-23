@@ -7,27 +7,33 @@ import { Star, Gem, Heart, Crown } from 'lucide-react';
 const features = [
   {
     icon: Star,
-    title: 'Master Artists',
+    title: "India's Top Bridal Artist",
     description:
-      'Internationally trained professionals with over 8 years of high-end bridal and editorial experience across South Asia and beyond.',
+      "Recognised as India's top bridal makeup artist with an international presence in the UAE. When you book Nizan, you secure access to one of the finest artistic minds in the country.",
   },
   {
     icon: Gem,
-    title: 'Luxury Products',
+    title: 'Exclusively Luxury Products',
     description:
-      'Exclusive use of top-tier, premium cosmetics from global luxury brands for flawless, long-lasting, camera-perfect results.',
+      "Every product is sourced from the world's most prestigious beauty houses — premium, internationally acclaimed, dermatologically trusted. Only the absolute finest graces your face.",
   },
   {
     icon: Heart,
-    title: 'Bespoke Care',
+    title: 'Certified Trainer & Expert',
     description:
-      'Personalized consultations and mood-board sessions tailored perfectly to your unique features, skin tone, and cultural aesthetics.',
+      "Feeniya has conducted 10+ prestigious masterclasses across Kerala, Tamil Nadu & Dubai. The depth of a master educator's knowledge is channelled into every single bridal look.",
   },
   {
     icon: Crown,
-    title: 'Royal Experience',
+    title: '2000+ Transformations',
     description:
-      'Immerse yourself in a serene, pampered environment that makes every appointment feel like an exclusive luxury ritual.',
+      'Over two thousand brides have sat in our chair and left feeling extraordinary. A decade of trust, precision, and radiant confidence. That is not a number — that is a legacy.',
+  },
+  {
+    icon: Gem,
+    title: 'Masterclass · Celebrity · Bridal',
+    description:
+      "Celebrity shoots, masterclass training, and bridal mastery — Feeniya's multi-dimensional expertise brings a rare, extraordinary depth to every look she creates.",
   },
 ];
 
@@ -36,7 +42,7 @@ export default function WhyChoose() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="about" className="section-cream py-28 lg:py-36" ref={ref}>
+    <section id="why-choose" className="section-cream py-28 lg:py-36" ref={ref}>
       <div className="max-w-[1320px] mx-auto px-6 lg:px-8">
         <div className="text-center mb-20">
           <motion.span
@@ -65,7 +71,7 @@ export default function WhyChoose() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16 max-w-6xl mx-auto">
           {features.map((feat, i) => {
             const Icon = feat.icon;
             return (
@@ -74,7 +80,7 @@ export default function WhyChoose() {
                 initial={{ opacity: 0, y: 40 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
                 transition={{ delay: i * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                className="text-center group"
+                className={`text-center group ${i >= 3 ? 'lg:col-span-1 lg:max-w-[340px] lg:mx-auto' : ''}`}
               >
                 {/* Icon container */}
                 <div className="relative mx-auto mb-6 w-20 h-20 flex items-center justify-center">
