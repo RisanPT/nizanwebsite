@@ -158,3 +158,25 @@ body {
 .fade-in-up {
   animation: fadeInUp 0.8s ease forwards;
 }
+
+/* Living Gold Border */
+@keyframes living-border {
+  0% { border-color: rgba(201, 162, 39, 0.2); }
+  50% { border-color: rgba(201, 162, 39, 0.8); }
+  100% { border-color: rgba(201, 162, 39, 0.2); }
+}
+
+.animate-living-border {
+  animation: living-border 3s ease-in-out infinite;
+}
+
+/* Floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

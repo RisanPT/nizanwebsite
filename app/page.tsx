@@ -10,12 +10,14 @@ import { WHATSAPP_URL } from '@/lib/constants';
 
 
 // Lazy-load below-fold sections
+const MasterclassAnnouncement = dynamic(() => import('@/components/MasterclassAnnouncement'), { ssr: false });
 const About = dynamic(() => import('@/components/About'), { ssr: false });
 const Services = dynamic(() => import('@/components/Services'), { ssr: false });
 const Portfolio = dynamic(() => import('@/components/Portfolio'), { ssr: false });
 const Team = dynamic(() => import('@/components/Team'), { ssr: false });
 const Branches = dynamic(() => import('@/components/Branches'), { ssr: false });
 const WhyChoose = dynamic(() => import('@/components/WhyChoose'), { ssr: false });
+const Testimonials = dynamic(() => import('@/components/Testimonials'), { ssr: false });
 const CTA = dynamic(() => import('@/components/CTA'), { ssr: false });
 const Contact = dynamic(() => import('@/components/Contact'), { ssr: false });
 
@@ -30,12 +32,17 @@ export default function Home() {
     <main className={`min-h-screen ${isBookingOpen ? 'overflow-hidden' : ''}`}>
       <Header onBook={openBooking} />
       <Hero onBook={openBooking} />
+      
+      <MasterclassAnnouncement />
+      
+      <About />
+      <WhyChoose />
       <Services />
       <Portfolio maxItems={4} />
       <Team />
+      <Testimonials />
+
       {/* <Branches /> */}
-      <WhyChoose />
-      <About />
 
       <CTA onBook={openBooking} />
       <Contact />
@@ -45,3 +52,4 @@ export default function Home() {
     </main>
   );
 }
+

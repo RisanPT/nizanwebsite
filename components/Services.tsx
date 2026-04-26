@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView, Variants } from 'framer-motion';
 import { Wind, Wand2 } from 'lucide-react';
+import { WHATSAPP_URL } from '@/lib/constants';
 
 const services = [
   {
@@ -103,7 +104,7 @@ export default function Services() {
                 <p className="text-navy/60 text-sm leading-relaxed flex-1">{svc.description}</p>
 
                 <button
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => window.open(WHATSAPP_URL, '_blank')}
                   className="mt-8 border border-navy/20 hover:border-gold text-navy hover:text-gold text-xs tracking-[0.15em] uppercase py-3 px-6 transition-all duration-300 hover:bg-gold/5"
                 >
                   Learn More →

@@ -42,7 +42,7 @@ export default function WhyChoose() {
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
   return (
-    <section id="why-choose" className="section-cream py-28 lg:py-36" ref={ref}>
+    <section id="who-we-are" className="section-cream py-28 lg:py-36" ref={ref}>
       <div className="max-w-[1320px] mx-auto px-6 lg:px-8">
         <div className="text-center mb-20">
           <motion.span
@@ -50,7 +50,7 @@ export default function WhyChoose() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             className="text-gold text-xs font-medium tracking-[0.3em] uppercase mb-4 block"
           >
-            The Nizan Difference
+            Our Identity
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -58,8 +58,9 @@ export default function WhyChoose() {
             transition={{ delay: 0.1, duration: 0.6 }}
             className="font-display text-4xl md:text-5xl font-light text-navy mb-5"
           >
-            Why Choose Nizan
+            Who We <span className="italic">Are</span>
           </motion.h2>
+
           <motion.p
             initial={{ opacity: 0, y: 15 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}

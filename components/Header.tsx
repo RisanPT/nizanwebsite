@@ -7,12 +7,16 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 
 const navLinks = [
-  { label: 'About Us', href: '#about', pageHref: '/about' },
-  { label: 'Services', href: '#services', pageHref: '/services' },
-  { label: 'Our Works', href: '#portfolio', pageHref: '/portfolio' },
-  { label: 'Our Team', href: '#team', pageHref: '/team' },
-  { label: 'Contact', href: '#contact', pageHref: '/contact' },
+  { label: 'About Us', href: '#about', pageHref: '/' },
+  { label: 'Who We Are', href: '#who-we-are', pageHref: '/' },
+  { label: 'Services', href: '#services', pageHref: '/' },
+  { label: 'Our Works', href: '#portfolio', pageHref: '/' },
+  { label: 'Our Team', href: '#team', pageHref: '/' },
+  { label: 'Testimonials', href: '#testimonials', pageHref: '/' },
+  { label: 'Contact', href: '#contact', pageHref: '/' },
 ];
+
+
 
 interface HeaderProps {
   onBook: () => void;
