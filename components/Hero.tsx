@@ -220,7 +220,7 @@ export default function Hero({ onBook }: HeroProps) {
         {/* Scroll cue */}
         <motion.div
           initial={{ opacity: 0 }}
-          animate={heroReady ? { opacity: 1 } : {}}
+          animate={{ opacity: 1 }}
           transition={{ delay: 2.6 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[3] flex flex-col items-center gap-2 pointer-events-none"
         >
