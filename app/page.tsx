@@ -15,7 +15,6 @@ const About = dynamic(() => import('@/components/About'), { ssr: false });
 const Services = dynamic(() => import('@/components/Services'), { ssr: false });
 const Portfolio = dynamic(() => import('@/components/Portfolio'), { ssr: false });
 const Team = dynamic(() => import('@/components/Team'), { ssr: false });
-const Branches = dynamic(() => import('@/components/Branches'), { ssr: false });
 const WhyChoose = dynamic(() => import('@/components/WhyChoose'), { ssr: false });
 const Testimonials = dynamic(() => import('@/components/Testimonials'), { ssr: false });
 const CTA = dynamic(() => import('@/components/CTA'), { ssr: false });

@@ -3,13 +3,14 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { LayoutDashboard, Image as ImageIcon, GraduationCap, LogOut, Loader2, Menu, X } from 'lucide-react';
+import { User } from '@supabase/supabase-js';
+import { Image as ImageIcon, GraduationCap, LogOut, Loader2, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { Toaster } from 'react-hot-toast';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
@@ -42,7 +43,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       if (!session && pathname !== '/admin/login') {
         router.push('/admin/login');

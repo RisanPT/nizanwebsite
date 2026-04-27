@@ -35,7 +35,7 @@ export const supabase = (supabaseUrl && isValidUrl(supabaseUrl) && supabaseAnonK
           getPublicUrl: () => ({ data: { publicUrl: '' } }),
         }),
       },
-    } as any;
+    } as unknown as ReturnType<typeof createClient>;
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !supabaseAnonKey) {
   console.warn('Supabase client is running in MOCK mode. Check your .env.local keys.');

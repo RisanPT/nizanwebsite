@@ -5,16 +5,8 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import ParticleCanvas from './ParticleCanvas';
 
-const MIN_LOADING_MS = 5000;
 const HERO_VIDEO_SRC = '/video-swap_2026-04-07_03-23-46.mp4';
 const HERO_POSTER_SRC = '/frames/ezgif-frame-001.jpg?v=3';
-
-const BRIDAL_STYLES = [
-  { frame: 30, label: 'The Hindu Bride' },
-  { frame: 70, label: 'The Muslim Bride' },
-  { frame: 140, label: 'Christian Elegance' },
-  { frame: 210, label: 'Modern Glamour' },
-];
 
 interface HeroProps {
   onBook: () => void;
@@ -22,11 +14,6 @@ interface HeroProps {
 
 export default function Hero({ onBook }: HeroProps) {
   const [isMobile, setIsMobile] = useState(false);
-  const [heroReady, setHeroReady] = useState(true);
-  const [showBridalIcons, setShowBridalIcons] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(100);
-  const [isLoaded, setIsLoaded] = useState(true);
-  const [minDelayPassed, setMinDelayPassed] = useState(true);
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -127,7 +114,7 @@ export default function Hero({ onBook }: HeroProps) {
               {/* Eyebrow label */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
-                animate={heroReady ? { opacity: 1, y: 0 } : {}}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8, duration: 0.6, ease: 'easeOut' }}
                 className="flex items-center gap-3 mb-6"
               >
@@ -141,7 +128,7 @@ export default function Hero({ onBook }: HeroProps) {
               {/* H1 */}
               <motion.h1
                 initial={{ opacity: 0, y: 44 }}
-                animate={heroReady ? { opacity: 1, y: 0 } : {}}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.2, duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
                 className="font-display font-light text-white leading-[1.05] tracking-tight mb-8"
                 style={{ fontSize: 'clamp(2.6rem, 6vw, 5rem)' }}
@@ -150,7 +137,7 @@ export default function Hero({ onBook }: HeroProps) {
                   Turning your dream
                   <motion.span
                     initial={{ scaleX: 0 }}
-                    animate={heroReady ? { scaleX: 1 } : {}}
+                    animate={{ scaleX: 1 }}
                     transition={{ delay: 2.3, duration: 1.0, ease: [0.22, 1, 0.36, 1] }}
                     className="absolute left-0 -bottom-1 h-[2px] w-full bg-gold block origin-left"
                   />
@@ -172,7 +159,7 @@ export default function Hero({ onBook }: HeroProps) {
               {/* Description */}
               <motion.p
                 initial={{ opacity: 0, y: 24 }}
-                animate={heroReady ? { opacity: 1, y: 0 } : {}}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.5, duration: 0.8, ease: 'easeOut' }}
                 className="text-white/70 text-base md:text-lg font-light leading-relaxed mb-10 max-w-xl"
               >
@@ -182,7 +169,7 @@ export default function Hero({ onBook }: HeroProps) {
               {/* CTA Buttons */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={heroReady ? { opacity: 1, y: 0 } : {}}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.8, duration: 0.7, ease: 'easeOut' }}
                 className="flex flex-wrap gap-4 mb-14"
               >
@@ -207,7 +194,7 @@ export default function Hero({ onBook }: HeroProps) {
               {/* Stats row */}
               <motion.div
                 initial={{ opacity: 0 }}
-                animate={heroReady ? { opacity: 1 } : {}}
+                animate={{ opacity: 1 }}
                 transition={{ delay: 2.1, duration: 0.9 }}
                 className="flex gap-8 pt-8 border-t border-white/10"
               >

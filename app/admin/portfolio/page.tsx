@@ -3,9 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
-import { Plus, Trash2, Loader2, Upload, X, GripVertical } from 'lucide-react';
+import { Plus, Trash2, Loader2, Upload, X } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { motion, Reorder } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 interface PortfolioItem {
   id: string;
@@ -112,14 +112,15 @@ export default function PortfolioAdmin() {
       setIsModalOpen(false);
       resetForm();
       fetchItems();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Failed to add item';
+      toast.error(message);
     } finally {
       setUploading(false);
     }
   };
 
-  const handleDelete = async (id: string, imageUrl: string) => {
+  const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
 
     try {
@@ -136,8 +137,9 @@ export default function PortfolioAdmin() {
 
       setItems(items.filter(item => item.id !== id));
       toast.success('Item deleted');
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Delete failed';
+      toast.error(message);
     }
   };
 
@@ -197,7 +199,7 @@ export default function PortfolioAdmin() {
                 <h3 className="text-white font-display text-lg font-light leading-tight">{item.title}</h3>
               </div>
               <button
-                onClick={() => handleDelete(item.id, item.image_url)}
+                onClick={() => handleDelete(item.id)}
                 className="absolute top-4 right-4 bg-red-500/80 p-2 text-white opacity-0 group-hover:opacity-100 transition-all hover:bg-red-600 backdrop-blur-md"
               >
                 <Trash2 size={16} />

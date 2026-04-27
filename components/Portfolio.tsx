@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
@@ -45,15 +45,7 @@ const layoutPresets: Array<Pick<PortfolioCard, 'gridClass' | 'aspect' | 'paralla
   },
 ];
 
-interface BackendPortfolioItem {
-  id: string;
-  title: string;
-  category?: string;
-  alt_text?: string;
-  image_url: string;
-  status?: string;
-  sort_order?: number;
-}
+
 
 function ParallaxPortfolioItem({
   src,
@@ -157,7 +149,12 @@ export default function Portfolio({
 
         if (error) throw error;
 
-        const mapped = (list || []).map((item: any, index: number) => {
+        const mapped = (list || []).map((item: {
+          image_url: string;
+          alt_text?: string;
+          title: string;
+          category?: string;
+        }, index: number) => {
           const preset = layoutPresets[index % layoutPresets.length];
           return {
             src: item.image_url,

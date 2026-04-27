@@ -3,9 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
-import { Save, Loader2, Upload, X, Calendar, MapPin, Link as LinkIcon, Trash2 } from 'lucide-react';
+import { Save, Loader2, Upload, Calendar, MapPin, Link as LinkIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { motion } from 'framer-motion';
 
 interface Masterclass {
   id: string;
@@ -37,14 +36,9 @@ export default function MasterclassAdmin() {
   }, []);
 
   const fetchData = async () => {
-    if (!supabase) {
-      setLoading(false);
-      return;
-    }
-    
     setLoading(true);
     try {
-      const { data: mc, error } = await supabase
+      const { data: mc } = await supabase
         .from('masterclass')
         .select('*')
         .order('created_at', { ascending: false })
@@ -83,7 +77,6 @@ export default function MasterclassAdmin() {
       let imageUrl = data?.image_url || '';
 
       if (selectedFile) {
-        // Validation
         if (selectedFile.size > 5 * 1024 * 1024) {
           throw new Error('File size exceeds 5MB limit. Please compress the poster image.');
         }
@@ -95,9 +88,6 @@ export default function MasterclassAdmin() {
           .upload(fileName, selectedFile);
         
         if (uploadError) {
-          if (uploadError.message.includes('Bucket not found')) {
-            throw new Error('Storage bucket "masterclass" not found. Please create it in Supabase dashboard.');
-          }
           throw uploadError;
         }
 
@@ -115,8 +105,7 @@ export default function MasterclassAdmin() {
         location,
         registration_url: regUrl,
         image_url: imageUrl,
-        status: 'active',
-        updated_at: new Date()
+        status: 'active'
       };
 
       if (data?.id) {
@@ -134,8 +123,9 @@ export default function MasterclassAdmin() {
 
       toast.success('Masterclass updated successfully');
       fetchData();
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Update failed';
+      toast.error(message);
     } finally {
       setSaving(false);
     }
@@ -159,7 +149,6 @@ export default function MasterclassAdmin() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        {/* Form Column */}
         <div className="lg:col-span-2">
           <form onSubmit={handleSave} className="space-y-8 bg-white/5 border border-white/10 p-10">
             <div className="space-y-2">

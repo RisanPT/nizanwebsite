@@ -31,8 +31,9 @@ export default function AdminLogin() {
 
       toast.success('Welcome back, Nizan');
       router.push('/admin/portfolio');
-    } catch (error: any) {
-      toast.error(error.message || 'Login failed');
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Login failed';
+      toast.error(message);
     } finally {
       setLoading(false);
     }

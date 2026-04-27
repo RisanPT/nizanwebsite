@@ -69,7 +69,7 @@ export default function Testimonials() {
             >
               <Quote className="text-gold/30 mb-6 group-hover:text-gold/50 transition-colors" size={32} />
               <p className="text-white/70 text-lg leading-relaxed mb-8 italic font-light">
-                "{t.text}"
+                &ldquo;{t.text}&rdquo;
               </p>
               <div>
                 <p className="text-white font-display text-xl mb-1">{t.name}</p>
