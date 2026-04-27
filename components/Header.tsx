@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
@@ -67,12 +68,15 @@ export default function Header({ onBook }: HeaderProps) {
           whileHover={{ scale: 1.02 }}
         >
           <Link href="/">
-            <img 
+            <Image 
               src="/nizan_logo_white.png" 
-              alt="Nizan Makeovers Logo" 
-              className={`transition-all duration-500 object-contain w-auto ${
-                scrolled ? 'h-16 md:h-20' : 'h-24 md:h-32'
+              alt="Nizan Makeovers Logo"
+              width={200}
+              height={100}
+              className={`transition-all duration-500 object-contain w-auto h-auto ${
+                scrolled ? 'max-h-16 md:max-h-20' : 'max-h-24 md:max-h-32'
               }`}
+              priority
             />
           </Link>
         </motion.div>

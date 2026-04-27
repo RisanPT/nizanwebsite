@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { Instagram, Facebook, Youtube } from 'lucide-react';
 
 const footerLinks = {
@@ -39,9 +40,11 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="mb-6">
-              <img 
+              <Image 
                 src="/nizan_logo_white.png" 
-                alt="Nizan Makeovers Logo" 
+                alt="Nizan Makeovers Logo"
+                width={120}
+                height={80}
                 className="h-20 md:h-32 w-auto object-contain opacity-90"
               />
             </div>

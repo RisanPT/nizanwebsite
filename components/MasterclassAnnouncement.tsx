@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar, MapPin, Users, ArrowRight, Loader2, X } from 'lucide-react';
 import { WHATSAPP_URL } from '@/lib/constants';
@@ -103,12 +104,14 @@ export default function MasterclassAnnouncement() {
 
             {/* Left Column: Visual (Hidden on mobile or top on mobile) */}
             <div className="relative w-full lg:w-2/5 aspect-[4/5] lg:aspect-auto overflow-hidden border-b lg:border-b-0 lg:border-r border-gold/20">
-              <img
+              <Image
                 src={displayData.image_url}
-                alt={displayData.title}
-                className="w-full h-full object-cover transition-transform duration-[3s] hover:scale-110"
+                alt={displayData.title || 'Masterclass Poster'}
+                fill
+                className="object-cover transition-transform duration-[3s] hover:scale-110"
+                priority
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-transparent lg:hidden" />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-transparent lg:hidden pointer-events-none" />
             </div>
 
             {/* Right Column: Content */}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import ParticleCanvas from './ParticleCanvas';
 
@@ -61,12 +62,12 @@ export default function Hero({ onBook }: HeroProps) {
           transition={{ duration: 1.2 }}
         >
           {isMobile ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
+            <Image
               src={HERO_POSTER_SRC}
               alt="Bridal makeup cinematic portrait"
-              className="absolute top-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-none"
-              style={{ display: 'block' }}
+              fill
+              priority
+              className="object-cover"
             />
           ) : (
             <video

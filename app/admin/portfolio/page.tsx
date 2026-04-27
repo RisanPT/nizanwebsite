@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Plus, Trash2, Loader2, Upload, X, GripVertical } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -184,10 +185,12 @@ export default function PortfolioAdmin() {
               key={item.id}
               className="group relative aspect-[4/5] bg-white/5 border border-white/10 overflow-hidden"
             >
-              <img
+              <Image
                 src={item.image_url}
                 alt={item.title}
-                className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500"
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent p-6 flex flex-col justify-end">
                 <span className="text-gold text-[9px] tracking-[0.3em] uppercase font-bold mb-1">{item.category}</span>
@@ -254,7 +257,12 @@ export default function PortfolioAdmin() {
                   `}
                 >
                   {previewUrl ? (
-                    <img src={previewUrl} className="w-full h-full object-cover" alt="Preview" />
+                    <Image 
+                      src={previewUrl} 
+                      alt="Preview"
+                      fill
+                      className="object-cover" 
+                    />
                   ) : (
                     <div className="flex flex-col items-center gap-3">
                       <Upload className="text-white/20" size={32} />

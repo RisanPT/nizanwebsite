@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { Save, Loader2, Upload, X, Calendar, MapPin, Link as LinkIcon, Trash2 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
@@ -239,7 +240,12 @@ export default function MasterclassAdmin() {
             className="group relative aspect-[4/5] bg-white/5 border border-white/10 overflow-hidden cursor-pointer hover:border-gold/30 transition-all flex items-center justify-center"
           >
             {previewUrl ? (
-              <img src={previewUrl} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="Poster Preview" />
+              <Image 
+                src={previewUrl} 
+                alt="Poster Preview"
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700" 
+              />
             ) : (
               <div className="flex flex-col items-center gap-4">
                 <Upload className="text-white/20" size={48} />

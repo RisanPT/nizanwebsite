@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 
 const highlights = [
@@ -141,12 +142,13 @@ export default function About() {
           >
             <div className="relative">
               {/* Portrait frame */}
-              <div className="aspect-[3/4] w-full overflow-hidden border border-gold/30 shadow-[0_24px_80px_rgba(11,27,59,0.18)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+              <div className="aspect-[3/4] w-full relative overflow-hidden border border-gold/30 shadow-[0_24px_80px_rgba(11,27,59,0.18)]">
+                <Image
                   src="/feeniya-nizan.jpg"
                   alt="Feeniya Nizan — Founder & Celebrity Makeup Artist, Nizan Makeovers"
-                  className="w-full h-full object-cover object-top transition-transform duration-700 hover:scale-105"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover object-top transition-transform duration-700 hover:scale-105"
                 />
                 {/* Subtle gradient at bottom */}
                 <div className="absolute inset-0 bg-gradient-to-t from-navy/50 via-transparent to-transparent" />

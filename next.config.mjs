@@ -7,6 +7,18 @@ const nextConfig = {
     localPatterns: [
       { pathname: '/frames/**' },
     ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'coentauechpcknmsflsv.supabase.co',
+        port: '',
+        pathname: '/storage/v1/object/public/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      }
+    ],
   },
 
   // Immutable cache headers for frames

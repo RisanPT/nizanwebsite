@@ -1,6 +1,7 @@
 'use client';
 
 import { useRef } from 'react';
+import Image from 'next/image';
 import { motion, useInView } from 'framer-motion';
 interface CTAProps {
   onBook: () => void;
@@ -14,11 +15,11 @@ export default function CTA({ onBook }: CTAProps) {
     <section className="relative py-28 lg:py-40 overflow-hidden" ref={ref}>
       {/* Background image with overlay */}
       <div className="absolute inset-0 z-0">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src="/frames/ezgif-frame-080.jpg?v=2"
           alt="Luxury bridal background"
-          className="w-full h-full object-cover object-top scale-[1.12]"
+          fill
+          className="object-cover object-top scale-[1.12]"
         />
         <div className="absolute inset-0 bg-navy/85" />
       </div>
@@ -54,9 +55,11 @@ export default function CTA({ onBook }: CTAProps) {
           transition={{ duration: 1, ease: "easeOut" }}
           className="flex justify-center mb-8"
         >
-          <img 
+          <Image 
             src="/nizan_logo_white.png" 
-            alt="Nizan Makeovers Logo" 
+            alt="Nizan Makeovers Logo"
+            width={120}
+            height={80}
             className="h-20 lg:h-28 w-auto object-contain"
           />
         </motion.div>
