@@ -15,125 +15,8 @@ export interface PortfolioCard {
   parallaxDir: 1 | -1;
 }
 
-export const portfolioItems: PortfolioCard[] = [
-  {
-    src: '/portfolio_images/photo-output (24).JPEG',
-    alt: 'Complete Bridal Transformation',
-    title: 'Complete Bridal',
-    category: 'Bridal Makeover',
-    gridClass: 'col-span-12 md:col-span-8',
-    aspect: 'aspect-[16/9]',
-    parallaxDir: 1,
-  },
-  {
-    src: '/portfolio_images/photo-output (23).JPEG',
-    alt: 'Elegant Fashion Makeover',
-    title: 'Fashion Forward',
-    category: 'Editorial',
-    gridClass: 'col-span-12 md:col-span-4',
-    aspect: 'aspect-[3/4]',
-    parallaxDir: -1,
-  },
-  {
-    src: '/portfolio_images/photo-output (21).JPEG',
-    alt: 'Masterclass Signature Look',
-    title: 'Masterclass Look',
-    category: 'Celebrity Makeup',
-    gridClass: 'col-span-12 md:col-span-8',
-    aspect: 'aspect-[16/9]',
-    parallaxDir: 1,
-  },
-  {
-    src: '/portfolio_images/photo-output (20).JPEG',
-    alt: 'Radiant Glow Look',
-    title: 'Radiant Glow',
-    category: 'Bridal Makeover',
-    gridClass: 'col-span-12 md:col-span-4',
-    aspect: 'aspect-[3/4]',
-    parallaxDir: -1,
-  },
-  {
-    src: '/portfolio_images/photo-output (19).JPEG',
-    alt: 'Exquisite Bridal Detail',
-    title: 'Exquisite Detail',
-    category: 'Bridal Makeover',
-    gridClass: 'col-span-12 md:col-span-4',
-    aspect: 'aspect-[3/4]',
-    parallaxDir: 1,
-  },
-  {
-    src: '/portfolio_images/photo-output (18).JPEG',
-    alt: 'Flawless Editorial Makeup',
-    title: 'Editorial Edge',
-    category: 'Editorial',
-    gridClass: 'col-span-12 md:col-span-8',
-    aspect: 'aspect-[16/9]',
-    parallaxDir: -1,
-  },
-  {
-    src: '/portfolio_images/photo-output (17).JPEG',
-    alt: 'Royal Bridal Makeover',
-    title: 'Royal Bride',
-    category: 'Bridal Makeover',
-    gridClass: 'col-span-12 md:col-span-4',
-    aspect: 'aspect-[3/4]',
-    parallaxDir: 1,
-  },
-  {
-    src: '/portfolio_images/photo-output (16).JPEG',
-    alt: 'Timeless Beauty Look',
-    title: 'Timeless Beauty',
-    category: 'Editorial',
-    gridClass: 'col-span-12 md:col-span-8',
-    aspect: 'aspect-[16/9]',
-    parallaxDir: -1,
-  },
-  {
-    src: '/portfolio_images/photo-output (14).JPEG',
-    alt: 'Modern Bridal Transformation',
-    title: 'Modern Bride',
-    category: 'Bridal Makeover',
-    gridClass: 'col-span-12 md:col-span-4',
-    aspect: 'aspect-[3/4]',
-    parallaxDir: 1,
-  },
-  {
-    src: '/portfolio_images/photo-output (13).JPEG',
-    alt: 'Signature Glow Finish',
-    title: 'Signature Glow',
-    category: 'Bridal Makeover',
-    gridClass: 'col-span-12 md:col-span-8',
-    aspect: 'aspect-[16/9]',
-    parallaxDir: -1,
-  },
-  {
-    src: '/portfolio_images/photo-output (12).JPEG',
-    alt: 'Luxury Airbrush Artistry',
-    title: 'Luxury Airbrush',
-    category: 'Airbrush Artistry',
-    gridClass: 'col-span-12 md:col-span-4',
-    aspect: 'aspect-[3/4]',
-    parallaxDir: 1,
-  },
-  {
-    src: '/portfolio_images/photo-output (9).JPEG',
-    alt: 'Elegant Event Makeup',
-    title: 'Evening Elegance',
-    category: 'Event Glamour',
-    gridClass: 'col-span-12 md:col-span-4',
-    aspect: 'aspect-[3/4]',
-    parallaxDir: -1,
-  },
-  {
-    src: '/portfolio_images/photo-output.JPEG',
-    alt: 'Nizan Signature Bridal Look',
-    title: 'Signature Bridal',
-    category: 'Bridal Makeover',
-    gridClass: 'col-span-12 md:col-span-8',
-    aspect: 'aspect-[16/9]',
-    parallaxDir: 1,
-  },
-];
+
+
 
 
 
@@ -293,12 +176,7 @@ export default function Portfolio({
   }, [items]);
 
   // Calculate resolved items directly without useMemo to avoid hook count issues
-  const source =
-    items && items.length > 0
-      ? items
-      : remoteItems.length > 0
-        ? remoteItems
-        : portfolioItems;
+  const source = items && items.length > 0 ? items : remoteItems;
 
   const resolvedItems = typeof maxItems === 'number' 
     ? source.slice(0, Math.max(0, maxItems)) 
