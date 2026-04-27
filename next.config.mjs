@@ -5,7 +5,7 @@ const nextConfig = {
     minimumCacheTTL: 60,
     unoptimized: false,
     localPatterns: [
-      { pathname: '/frames/**' },
+      { pathname: '/**' },
     ],
     remotePatterns: [
       {
