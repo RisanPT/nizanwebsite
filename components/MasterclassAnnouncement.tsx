@@ -1,144 +1,182 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { Calendar, MapPin, Users, ArrowRight } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Calendar, MapPin, Users, ArrowRight, Loader2, X } from 'lucide-react';
 import { WHATSAPP_URL } from '@/lib/constants';
+import { supabase } from '@/lib/supabase';
+
+interface MasterclassData {
+  title: string;
+  description: string;
+  date_range: string;
+  location: string;
+  image_url: string;
+  registration_url: string;
+}
 
 export default function MasterclassAnnouncement() {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-100px' });
+  const [data, setData] = useState<MasterclassData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchMasterclass = async () => {
+      if (!supabase) {
+        setLoading(false);
+        return;
+      }
+      
+      try {
+        const { data: mc, error } = await supabase
+          .from('masterclass')
+          .select('*')
+          .eq('status', 'active')
+          .order('updated_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        
+        if (error) console.error('Supabase error:', error);
+        if (mc) setData(mc);
+      } catch (err) {
+        console.error('Error fetching masterclass:', err);
+      } finally {
+        setLoading(false);
+        // Show popup after 1.5 seconds delay
+        setTimeout(() => setIsOpen(true), 1500);
+      }
+    };
+
+    fetchMasterclass();
+  }, []);
+
+  // Prevent background scrolling when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => { document.body.style.overflow = 'unset'; };
+  }, [isOpen]);
+
+  if (loading && !isOpen) return null;
+
+  const displayData = data || {
+    title: 'Upcoming Masterclass 2025',
+    description: 'Join our professional bridal transformation masterclass. Level up your skills with industry-leading techniques.',
+    date_range: 'Announcing Soon',
+    location: 'Nizan Studio',
+    image_url: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=2087&auto=format&fit=crop',
+    registration_url: '#'
+  };
 
   return (
-    <section className="relative py-24 overflow-hidden" ref={ref}>
-      {/* Background Decorative Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[400px] bg-gold/10 rounded-full blur-[100px]" />
-      </div>
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4 py-6 md:p-8">
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsOpen(false)}
+            className="absolute inset-0 bg-navy/80 backdrop-blur-md cursor-pointer"
+          />
 
-      <div className="max-w-[1320px] mx-auto px-6 lg:px-8 relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="relative bg-navy/40 backdrop-blur-md border border-gold/20 p-8 md:p-16 overflow-hidden group animate-living-border"
-        >
-          {/* Subtle Shimmer Background */}
-          <div className="absolute inset-0 opacity-10 group-hover:opacity-20 transition-opacity duration-700">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
-          </div>
+          {/* Modal Container */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+            className="relative w-full max-w-5xl bg-navy/95 border border-gold/30 shadow-[0_0_80px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col lg:flex-row max-h-full"
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-4 right-4 z-50 w-10 h-10 bg-gold text-navy rounded-full flex items-center justify-center hover:bg-white transition-colors duration-300 shadow-xl"
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left Column: Content */}
-            <div>
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={inView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="flex items-center gap-3 mb-6"
-              >
+            {/* Left Column: Visual (Hidden on mobile or top on mobile) */}
+            <div className="relative w-full lg:w-2/5 aspect-[4/5] lg:aspect-auto overflow-hidden border-b lg:border-b-0 lg:border-r border-gold/20">
+              <img
+                src={displayData.image_url}
+                alt={displayData.title}
+                className="w-full h-full object-cover transition-transform duration-[3s] hover:scale-110"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy via-transparent to-transparent lg:hidden" />
+            </div>
+
+            {/* Right Column: Content */}
+            <div className="w-full lg:w-3/5 p-8 md:p-12 overflow-y-auto custom-scrollbar">
+              <div className="flex items-center gap-3 mb-6">
                 <span className="w-10 h-px bg-gold" />
                 <span className="text-gold text-[10px] tracking-[0.4em] uppercase font-bold">
-                  Exclusive Opportunity
+                  Limited Opportunity
                 </span>
-              </motion.div>
+              </div>
 
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.3, duration: 0.7 }}
-                className="font-display text-4xl md:text-5xl lg:text-6xl text-white font-light leading-tight mb-8"
-              >
-                Advanced Bridal <br />
-                <span className="italic gradient-text">Masterclass 2025</span>
-              </motion.h2>
+              <h2 className="font-display text-3xl md:text-5xl text-white font-light leading-tight mb-6">
+                {displayData.title ? (
+                  <>
+                    {displayData.title.split(' ').slice(0, 2).join(' ')} <br />
+                    <span className="italic gradient-text">{displayData.title.split(' ').slice(2).join(' ')}</span>
+                  </>
+                ) : (
+                  'Upcoming Masterclass'
+                )}
+              </h2>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.4, duration: 0.7 }}
-                className="text-white/60 text-lg mb-10 max-w-lg leading-relaxed"
-              >
-                Join Feeniya Nizan for an intensive professional training session. 
-                Master the secrets of signature airbrush techniques and luxury bridal artistry.
-              </motion.p>
+              <p className="text-white/60 text-base md:text-lg mb-8 leading-relaxed">
+                {displayData.description}
+              </p>
 
               {/* Detail Chips */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-12">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
                 {[
-                  { icon: Calendar, text: 'June 15-18, 2025' },
-                  { icon: MapPin, text: 'Kochi, Kerala' },
-                  { icon: Users, text: 'Limited Seats Available' },
-                  { icon: ArrowRight, text: 'Professional Certification' },
+                  { icon: Calendar, text: displayData.date_range },
+                  { icon: MapPin, text: displayData.location },
+                  { icon: Users, text: 'Limited Batch' },
                 ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={inView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ delay: 0.5 + i * 0.1 }}
-                    className="flex items-center gap-3 text-white/80 group/item"
-                  >
-                    <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center group-hover/item:bg-gold/20 transition-colors">
+                  <div key={i} className="flex items-center gap-3 text-white/80">
+                    <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center">
                       <item.icon size={16} className="text-gold" />
                     </div>
-                    <span className="text-sm font-medium tracking-wide">{item.text}</span>
-                  </motion.div>
+                    <span className="text-sm font-medium">{item.text}</span>
+                  </div>
                 ))}
               </div>
 
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={inView ? { opacity: 1, scale: 1 } : {}}
-                transition={{ delay: 0.8, duration: 0.6 }}
-              >
+              <div className="flex flex-col sm:flex-row gap-4">
                 <a
-                  href={WHATSAPP_URL}
+                  href={displayData.registration_url || WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="shimmer-btn inline-flex items-center gap-3 bg-gold text-navy px-10 py-5 text-xs font-bold tracking-[0.2em] uppercase transition-all duration-400 hover:shadow-[0_0_40px_rgba(201,162,39,0.5)] pulse-gold"
+                  className="shimmer-btn inline-flex items-center justify-center gap-3 bg-gold text-navy px-8 py-4 text-xs font-bold tracking-[0.2em] uppercase transition-all duration-400 hover:shadow-[0_0_30px_rgba(201,162,39,0.4)]"
                 >
                   Register Now
                   <ArrowRight size={16} />
                 </a>
-              </motion.div>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="inline-flex items-center justify-center px-8 py-4 text-xs font-bold tracking-[0.2em] uppercase text-white/40 hover:text-white transition-colors"
+                >
+                  Maybe Later
+                </button>
+              </div>
             </div>
 
-            {/* Right Column: Visual/Card */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={inView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              className="relative aspect-square lg:aspect-[4/5] overflow-hidden border border-gold/30 animate-float"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/frames/ezgif-frame-080.jpg?v=2"
-                alt="Masterclass Showcase"
-                className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-transparent to-transparent" />
-              
-              <div className="absolute bottom-8 left-8 right-8">
-                <p className="text-gold text-[10px] tracking-[0.3em] uppercase mb-2 font-bold">
-                  Expert Instruction
-                </p>
-                <p className="font-display text-2xl text-white font-light italic">
-                  &ldquo;Artistry is a journey, not a destination.&rdquo;
-                </p>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Decorative Corner Accents */}
-          <div className="absolute top-0 right-0 w-32 h-32 overflow-hidden pointer-events-none">
-            <div className="absolute top-0 right-0 w-[200%] h-[2px] bg-gold/30 rotate-45 translate-x-1/2 -translate-y-1/2" />
-          </div>
-          <div className="absolute bottom-0 left-0 w-32 h-32 overflow-hidden pointer-events-none">
-            <div className="absolute bottom-0 left-0 w-[200%] h-[2px] bg-gold/30 rotate-45 -translate-x-1/2 translate-y-1/2" />
-          </div>
-        </motion.div>
-      </div>
-    </section>
+            {/* Decorative Corner Accents */}
+            <div className="absolute top-0 right-0 w-24 h-24 overflow-hidden pointer-events-none opacity-20">
+              <div className="absolute top-0 right-0 w-[200%] h-[1px] bg-gold rotate-45 translate-x-1/2 -translate-y-1/2" />
+            </div>
+          </motion.div>
+        </div>
+      )}
+    </AnimatePresence>
   );
 }

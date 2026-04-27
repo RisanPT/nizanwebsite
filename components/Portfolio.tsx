@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, useInView, useScroll, useTransform } from 'framer-motion';
-import { ERP_API_URL, getFromErp } from '@/lib/erp';
+import { supabase } from '@/lib/supabase';
 
 export interface PortfolioCard {
   src: string;
@@ -162,23 +162,14 @@ const layoutPresets: Array<Pick<PortfolioCard, 'gridClass' | 'aspect' | 'paralla
 ];
 
 interface BackendPortfolioItem {
-  _id: string;
+  id: string;
   title: string;
   category?: string;
-  altText?: string;
-  imageUrl: string;
+  alt_text?: string;
+  image_url: string;
   status?: string;
-  sortOrder?: number;
+  sort_order?: number;
 }
-
-const toAbsolutePortfolioImageUrl = (imageUrl: string) => {
-  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-    return imageUrl;
-  }
-
-  const normalized = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
-  return `${ERP_API_URL}${normalized}`;
-};
 
 function ParallaxPortfolioItem({
   src,
@@ -269,15 +260,22 @@ export default function Portfolio({
     if (items && items.length > 0) return;
 
     const loadPortfolio = async () => {
+      if (!supabase) return;
+      
       try {
-        const payload = await getFromErp<BackendPortfolioItem[]>('/api/portfolio/public');
-        const list = Array.isArray(payload) ? payload : [];
+        const { data: list, error } = await supabase
+          .from('portfolio')
+          .select('*')
+          .eq('status', 'active')
+          .order('sort_order', { ascending: true });
 
-        const mapped = list.map((item, index) => {
+        if (error) throw error;
+
+        const mapped = (list || []).map((item: any, index: number) => {
           const preset = layoutPresets[index % layoutPresets.length];
           return {
-            src: toAbsolutePortfolioImageUrl(item.imageUrl),
-            alt: item.altText?.trim() || item.title,
+            src: item.image_url,
+            alt: item.alt_text?.trim() || item.title,
             title: item.title,
             category: item.category?.trim() || 'Portfolio',
             ...preset,
@@ -285,7 +283,8 @@ export default function Portfolio({
         });
 
         setRemoteItems(mapped);
-      } catch {
+      } catch (error) {
+        console.error('Portfolio fetch error:', error);
         setRemoteItems([]);
       }
     };
@@ -293,20 +292,17 @@ export default function Portfolio({
     loadPortfolio();
   }, [items]);
 
-  const resolvedItems = useMemo(() => {
-    const source =
-      items && items.length > 0
-        ? items
-        : remoteItems.length > 0
-          ? remoteItems
-          : portfolioItems;
+  // Calculate resolved items directly without useMemo to avoid hook count issues
+  const source =
+    items && items.length > 0
+      ? items
+      : remoteItems.length > 0
+        ? remoteItems
+        : portfolioItems;
 
-    if (typeof maxItems === 'number') {
-      return source.slice(0, Math.max(0, maxItems));
-    }
-
-    return source;
-  }, [items, maxItems, remoteItems]);
+  const resolvedItems = typeof maxItems === 'number' 
+    ? source.slice(0, Math.max(0, maxItems)) 
+    : source;
 
   return (
     <section id="portfolio" className="section-dark py-28 lg:py-36" ref={ref}>
