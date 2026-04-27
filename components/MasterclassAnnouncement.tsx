@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Calendar, MapPin, Users, ArrowRight, Loader2, X } from 'lucide-react';
+import { Calendar, MapPin, Users, ArrowRight, X } from 'lucide-react';
 import { WHATSAPP_URL } from '@/lib/constants';
 import { supabase } from '@/lib/supabase';
 
